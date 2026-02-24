@@ -1,88 +1,215 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import { useEffect, useMemo, useState } from 'react';
+import Login from './Login';
+import Register from './pages/Register';
+import Home from './pages/Home';
+import Cart from './pages/Cart';
+import NavBar from './pages/NavBar';
+import BrandLogo from './components/BrandLogo';
+import { apiUrl } from './api';
+import './App.css';
+import './FlowerShopTheme.css';
 
 function App() {
-  const [count, setCount] = useState(0);
-  const [users, setUsers] = useState([]);
-  const [username, setUsername] = useState('');
-  const [email, setEmail] = useState('');
-  const [editId, setEditId] = useState('');
-  const [editUsername, setEditUsername] = useState('');
-  const [editEmail, setEditEmail] = useState('');
+  const [user, setUser] = useState(null);
+  const [authMode, setAuthMode] = useState('login');
+  const [page, setPage] = useState('home');
+  const [products, setProducts] = useState([]);
+  const [orders, setOrders] = useState([]);
+  const [cart, setCart] = useState([]);
+  const [globalMessage, setGlobalMessage] = useState('');
+  const [loadingProducts, setLoadingProducts] = useState(true);
 
-  // 查询所有用户
-  const fetchUsers = async () => {
-    const res = await fetch('/api/users');
-    const data = await res.json();
-    setUsers(Array.isArray(data) ? data : []);
-  };
+  const cartCount = useMemo(
+    () => cart.reduce((sum, item) => sum + item.quantity, 0),
+    [cart]
+  );
 
-  // 创建用户
-  const createUser = async () => {
-    const res = await fetch('/api/users', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ username, email })
+  async function fetchProducts() {
+    try {
+      setLoadingProducts(true);
+      const res = await fetch(apiUrl('/products'));
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || 'Failed to load products');
+      setProducts(data);
+    } catch (error) {
+      setGlobalMessage(error.message);
+    } finally {
+      setLoadingProducts(false);
+    }
+  }
+
+  async function fetchOrders(username) {
+    if (!username) return;
+    try {
+      const res = await fetch(apiUrl(`/orders?username=${encodeURIComponent(username)}`));
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || 'Failed to load orders');
+      setOrders(data);
+    } catch (error) {
+      setGlobalMessage(error.message);
+    }
+  }
+
+  useEffect(() => {
+    fetchProducts();
+  }, []);
+
+  useEffect(() => {
+    if (user?.username) fetchOrders(user.username);
+  }, [user]);
+
+  function handleAddToCart(product) {
+    setCart((prev) => {
+      const existing = prev.find((item) => item.id === product.id);
+      if (existing) {
+        return prev.map((item) =>
+          item.id === product.id ? { ...item, quantity: item.quantity + 1 } : item
+        );
+      }
+      return [...prev, { ...product, quantity: 1 }];
     });
-    await fetchUsers();
-  };
+    setGlobalMessage(`Added to cart: ${product.name}`);
+  }
 
-  // 删除用户
-  const deleteUser = async (id) => {
-    await fetch(`/api/users/${id}`, { method: 'DELETE' });
-    await fetchUsers();
-  };
+  function handleRemoveFromCart(productId) {
+    setCart((prev) => prev.filter((item) => item.id !== productId));
+  }
 
-  // 更新用户
-  const updateUser = async () => {
-    await fetch(`/api/users/${editId}`, {
-      method: 'PUT',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ username: editUsername, email: editEmail })
-    });
-    await fetchUsers();
-  };
+  function handleUpdateQuantity(productId, quantity) {
+    if (quantity <= 0) return;
+    setCart((prev) =>
+      prev.map((item) => (item.id === productId ? { ...item, quantity } : item))
+    );
+  }
+
+  async function handleCheckout(deliveryAddress, note) {
+    if (!user?.username) return;
+    try {
+      const res = await fetch(apiUrl('/orders'), {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          username: user.username,
+          items: cart,
+          deliveryAddress,
+          note,
+        }),
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || 'Failed to place order');
+
+      setCart([]);
+      setGlobalMessage(`Order placed successfully. Order #${data.orderId}`);
+      setPage('orders');
+      fetchOrders(user.username);
+    } catch (error) {
+      setGlobalMessage(error.message);
+    }
+  }
+
+  function handleLogout() {
+    setUser(null);
+    setPage('home');
+    setCart([]);
+    setOrders([]);
+    setGlobalMessage('Logged out successfully');
+  }
 
   return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <button onClick={fetchUsers} style={{marginLeft: '10px'}}>查询所有用户</button>
-        <div style={{marginTop: '20px'}}>
-          <input placeholder="用户名" value={username} onChange={e => setUsername(e.target.value)} />
-          <input placeholder="邮箱" value={email} onChange={e => setEmail(e.target.value)} />
-          <button onClick={createUser}>新增用户</button>
+    <div className="shop-shell">
+      <header className="hero-banner">
+        <div className="hero-content">
+          <BrandLogo />
+          <h1>Urban Flower E-Commerce</h1>
+          <p>Same-day delivery, seasonal custom bouquets, and corporate gifting.</p>
         </div>
-        <div style={{marginTop: '20px'}}>
-          <input placeholder="用户ID" value={editId} onChange={e => setEditId(e.target.value)} />
-          <input placeholder="新用户名" value={editUsername} onChange={e => setEditUsername(e.target.value)} />
-          <input placeholder="新邮箱" value={editEmail} onChange={e => setEditEmail(e.target.value)} />
-          <button onClick={updateUser}>更新用户</button>
+      </header>
+
+      {!user ? (
+        <main className="auth-layout">
+          <section className="auth-card-wrap">
+            {authMode === 'login' ? (
+              <Login
+                onLogin={(loginUser) => {
+                  setUser(loginUser);
+                  setGlobalMessage(`Welcome back, ${loginUser.username}`);
+                }}
+              />
+            ) : (
+              <Register
+                onRegister={() => {
+                  setAuthMode('login');
+                  setGlobalMessage('Registration successful. Please log in.');
+                }}
+              />
+            )}
+            <button
+              className="ghost-btn"
+              onClick={() => setAuthMode((prev) => (prev === 'login' ? 'register' : 'login'))}
+            >
+              {authMode === 'login' ? "Don't have an account? Register" : 'Already have an account? Log in'}
+            </button>
+          </section>
+          <Home
+            products={products.slice(0, 3)}
+            loading={loadingProducts}
+            onAddToCart={null}
+            readonly
+          />
+        </main>
+      ) : (
+        <>
+          <NavBar
+            loginUser={user.username}
+            onLogout={handleLogout}
+            onNav={setPage}
+            currentPage={page}
+            cartCount={cartCount}
+          />
+          <main className="page-main">
+            {page === 'home' && (
+              <Home
+                products={products}
+                loading={loadingProducts}
+                onAddToCart={handleAddToCart}
+              />
+            )}
+            {page === 'cart' && (
+              <Cart
+                cart={cart}
+                onCheckout={handleCheckout}
+                onRemove={handleRemoveFromCart}
+                onUpdateQuantity={handleUpdateQuantity}
+              />
+            )}
+            {page === 'orders' && (
+              <section className="panel orders-panel">
+                <h2>My Orders</h2>
+                {orders.length === 0 && <p>No orders yet. Start shopping from the home page.</p>}
+                {orders.map((order) => (
+                  <article key={order.id} className="order-item">
+                    <div>
+                      <strong>Order #{order.id}</strong>
+                      <span className="order-status">{order.status}</span>
+                    </div>
+                    <p>Total: ¥{Number(order.totalAmount).toFixed(2)}</p>
+                    <p>Address: {order.deliveryAddress}</p>
+                    <p>Time: {new Date(order.createdAt).toLocaleString()}</p>
+                  </article>
+                ))}
+              </section>
+            )}
+          </main>
+        </>
+      )}
+
+      {globalMessage && (
+        <div className="toast-message" onAnimationEnd={() => setGlobalMessage('')}>
+          {globalMessage}
         </div>
-        <ul>
-          {users.map(u => (
-            <li key={u.id}>
-              {u.username} ({u.email})
-              <button onClick={() => deleteUser(u.id)} style={{marginLeft: '10px'}}>删除</button>
-            </li>
-          ))}
-        </ul>
-      </div>
-    </>
+      )}
+    </div>
   );
 }
 
-export default App
+export default App;
