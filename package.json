@@ -1,0 +1,13 @@
+{
+  "scripts": {
+    "dev:docker": "docker compose -f docker-compose.dev.yml up --build",
+    "build:frontend": "npm --prefix frontend run build",
+    "deploy:frontend": "powershell -ExecutionPolicy Bypass -File ./scripts/deploy-frontend-firebase.ps1",
+    "deploy:backend": "powershell -ExecutionPolicy Bypass -File ./scripts/deploy-backend-cloudrun.ps1"
+  },
+  "dependencies": {
+    "bcryptjs": "^3.0.3",
+    "bootstrap": "^5.3.8",
+    "react-bootstrap": "^2.10.10"
+  }
+}

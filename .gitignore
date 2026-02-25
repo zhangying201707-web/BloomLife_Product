@@ -1,0 +1,15 @@
+# Local environment and secrets
+.env
+.env.*
+!.env.example
+!.env.*.example
+
+# Backend local secrets
+backend/.env.generated
+backend/env.cloudrun.yaml
+
+# Frontend local secrets
+frontend/.env
+frontend/.env.*
+!frontend/.env.example
+!frontend/.env.*.example
