@@ -5,7 +5,7 @@ import Home from './pages/Home';
 import Cart from './pages/Cart';
 import NavBar from './pages/NavBar';
 import BrandLogo from './components/BrandLogo';
-// ===== 导入Sprint 1组件 =====
+// ===== Import Sprint 1 components =====
 import OccasionSelector from './components/sprint1/OccasionSelector';
 import PricingDisplay from './components/sprint1/PricingDisplay';
 import DeliveryChecker from './components/sprint1/DeliveryChecker';
@@ -24,7 +24,7 @@ function App() {
   const [globalMessage, setGlobalMessage] = useState('');
   const [loadingProducts, setLoadingProducts] = useState(true);
 
-  // ===== Sprint 1 新增状态 =====
+  // ===== Sprint 1 new state =====
   const [selectedOccasion, setSelectedOccasion] = useState('');
   const [filteredProducts, setFilteredProducts] = useState([]);
   const [showSprint1Features, setShowSprint1Features] = useState(false);
@@ -41,7 +41,7 @@ function App() {
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || 'Failed to load products');
       setProducts(data);
-      setFilteredProducts(data); // 初始化筛选结果
+      setFilteredProducts(data);
     } catch (error) {
       setGlobalMessage(error.message);
     } finally {
@@ -126,7 +126,7 @@ function App() {
     setGlobalMessage('Logged out successfully');
   }
 
-  // ===== Sprint 1 筛选功能 =====
+  // ===== Sprint 1 filter function =====
   async function handleFilterByOccasion(occasion) {
     setSelectedOccasion(occasion);
     try {
@@ -145,7 +145,7 @@ function App() {
           <BrandLogo />
           <h1>Urban Flower E-Commerce</h1>
           <p>Same-day delivery, seasonal custom bouquets, and corporate gifting.</p>
-          {/* ===== Sprint 1 演示开关 ===== */}
+          {/* ===== Sprint 1 toggle button ===== */}
           {user && (
             <button 
               onClick={() => setShowSprint1Features(!showSprint1Features)}
@@ -158,7 +158,7 @@ function App() {
                 cursor: 'pointer'
               }}
             >
-              {showSprint1Features ? '隐藏 Sprint 1 新功能' : '显示 Sprint 1 新功能'}
+              {showSprint1Features ? 'Hide Sprint 1 Features' : 'Show Sprint 1 Features'}
             </button>
           )}
         </div>
@@ -206,162 +206,162 @@ function App() {
             cartCount={cartCount}
           />
           
-          {/* ===== Sprint 1 功能区域 ===== */}
-        {showSprint1Features && (
-  <div style={{
-    background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
-    padding: '25px',
-    margin: '20px',
-    borderRadius: '15px',
-    color: 'white',
-    boxShadow: '0 10px 30px rgba(0,0,0,0.2)'
-  }}>
-    <h2 style={{margin: '0 0 20px 0', textAlign: 'center'}}>📋 Sprint 1 功能清单 (10/10 已完成)</h2>
-    
-    <div style={{
-      display: 'grid',
-      gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))',
-      gap: '15px'
-    }}>
-      
-      {/* SCRUM-8: 场合选择 */}
-      <div style={{background: 'rgba(255,255,255,0.15)', padding: '15px', borderRadius: '10px'}}>
-        <div style={{display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '10px'}}>
-          <span style={{background: '#4CAF50', width: '20px', height: '20px', borderRadius: '50%'}}></span>
-          <strong>SCRUM-8: 场合选择</strong>
-        </div>
-        <OccasionSelector onSelect={handleFilterByOccasion} />
-      </div>
+          {/* ===== Sprint 1 Features Panel ===== */}
+          {showSprint1Features && (
+            <div style={{
+              background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+              padding: '25px',
+              margin: '20px',
+              borderRadius: '15px',
+              color: 'white',
+              boxShadow: '0 10px 30px rgba(0,0,0,0.2)'
+            }}>
+              <h2 style={{margin: '0 0 20px 0', textAlign: 'center'}}>📋 Sprint 1 Features (10/10 Completed)</h2>
+              
+              <div style={{
+                display: 'grid',
+                gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))',
+                gap: '15px'
+              }}>
+                
+                {/* SCRUM-8: Occasion Selection */}
+                <div style={{background: 'rgba(255,255,255,0.15)', padding: '15px', borderRadius: '10px'}}>
+                  <div style={{display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '10px'}}>
+                    <span style={{background: '#4CAF50', width: '20px', height: '20px', borderRadius: '50%'}}></span>
+                    <strong>SCRUM-8: Occasion Selection</strong>
+                  </div>
+                  <OccasionSelector onSelect={handleFilterByOccasion} />
+                </div>
 
-      {/* SCRUM-9: 筛选 */}
-      <div style={{background: 'rgba(255,255,255,0.15)', padding: '15px', borderRadius: '10px'}}>
-        <div style={{display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '10px'}}>
-          <span style={{background: '#4CAF50', width: '20px', height: '20px', borderRadius: '50%'}}></span>
-          <strong>SCRUM-9: 风格筛选</strong>
-        </div>
-        <button 
-          style={{margin: '5px', padding: '8px', background: 'white', border: 'none', borderRadius: '5px'}}
-          onClick={async () => {
-            const res = await fetch(apiUrl('/products/filter?style=浪漫'));
-            const data = await res.json();
-            alert(`找到 ${data.data.length} 个浪漫风格的产品`);
-          }}
-        >浪漫</button>
-        <button 
-          style={{margin: '5px', padding: '8px', background: 'white', border: 'none', borderRadius: '5px'}}
-          onClick={async () => {
-            const res = await fetch(apiUrl('/products/filter?mood=快乐'));
-            const data = await res.json();
-            alert(`找到 ${data.data.length} 个快乐心情的产品`);
-          }}
-        >快乐</button>
-      </div>
+                {/* SCRUM-9: Filter by Style */}
+                <div style={{background: 'rgba(255,255,255,0.15)', padding: '15px', borderRadius: '10px'}}>
+                  <div style={{display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '10px'}}>
+                    <span style={{background: '#4CAF50', width: '20px', height: '20px', borderRadius: '50%'}}></span>
+                    <strong>SCRUM-9: Filter by Style</strong>
+                  </div>
+                  <button 
+                    style={{margin: '5px', padding: '8px', background: 'white', border: 'none', borderRadius: '5px'}}
+                    onClick={async () => {
+                      const res = await fetch('http://localhost:3000/api/products/filter?style=Romantic');
+                      const data = await res.json();
+                      alert(`Found ${data.data.length} Romantic style products`);
+                    }}
+                  >Romantic</button>
+                  <button 
+                    style={{margin: '5px', padding: '8px', background: 'white', border: 'none', borderRadius: '5px'}}
+                    onClick={async () => {
+                      const res = await fetch('http://localhost:3000/api/products/filter?mood=Happy');
+                      const data = await res.json();
+                      alert(`Found ${data.data.length} Happy mood products`);
+                    }}
+                  >Happy</button>
+                </div>
 
-      {/* SCRUM-13: 价格明细 */}
-      <div style={{background: 'rgba(255,255,255,0.15)', padding: '15px', borderRadius: '10px'}}>
-        <div style={{display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '10px'}}>
-          <span style={{background: '#4CAF50', width: '20px', height: '20px', borderRadius: '50%'}}></span>
-          <strong>SCRUM-13: 价格明细</strong>
-        </div>
-        <PricingDisplay productId={products[0]?.id} />
-      </div>
+                {/* SCRUM-13: Price Breakdown */}
+                <div style={{background: 'rgba(255,255,255,0.15)', padding: '15px', borderRadius: '10px'}}>
+                  <div style={{display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '10px'}}>
+                    <span style={{background: '#4CAF50', width: '20px', height: '20px', borderRadius: '50%'}}></span>
+                    <strong>SCRUM-13: Price Breakdown</strong>
+                  </div>
+                  <PricingDisplay productId={products[0]?.id} />
+                </div>
 
-      {/* SCRUM-14: 配送日期 */}
-      <div style={{background: 'rgba(255,255,255,0.15)', padding: '15px', borderRadius: '10px'}}>
-        <div style={{display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '10px'}}>
-          <span style={{background: '#4CAF50', width: '20px', height: '20px', borderRadius: '50%'}}></span>
-          <strong>SCRUM-14: 配送日期</strong>
-        </div>
-        <DeliveryChecker productId={products[0]?.id} />
-      </div>
+                {/* SCRUM-14: Delivery Date */}
+                <div style={{background: 'rgba(255,255,255,0.15)', padding: '15px', borderRadius: '10px'}}>
+                  <div style={{display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '10px'}}>
+                    <span style={{background: '#4CAF50', width: '20px', height: '20px', borderRadius: '50%'}}></span>
+                    <strong>SCRUM-14: Delivery Date</strong>
+                  </div>
+                  <DeliveryChecker productId={products[0]?.id} />
+                </div>
 
-      {/* SCRUM-18: 问候卡 */}
-      <div style={{background: 'rgba(255,255,255,0.15)', padding: '15px', borderRadius: '10px'}}>
-        <div style={{display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '10px'}}>
-          <span style={{background: '#4CAF50', width: '20px', height: '20px', borderRadius: '50%'}}></span>
-          <strong>SCRUM-18: 问候卡</strong>
-        </div>
-        <GreetingCard />
-      </div>
+                {/* SCRUM-18: Greeting Card */}
+                <div style={{background: 'rgba(255,255,255,0.15)', padding: '15px', borderRadius: '10px'}}>
+                  <div style={{display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '10px'}}>
+                    <span style={{background: '#4CAF50', width: '20px', height: '20px', borderRadius: '50%'}}></span>
+                    <strong>SCRUM-18: Greeting Card</strong>
+                  </div>
+                  <GreetingCard />
+                </div>
 
-      {/* SCRUM-19: 可选礼物 */}
-      <div style={{background: 'rgba(255,255,255,0.15)', padding: '15px', borderRadius: '10px'}}>
-        <div style={{display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '10px'}}>
-          <span style={{background: '#4CAF50', width: '20px', height: '20px', borderRadius: '50%'}}></span>
-          <strong>SCRUM-19: 可选礼物</strong>
-        </div>
-        <button 
-          style={{margin: '5px', padding: '8px', background: 'white', border: 'none', borderRadius: '5px'}}
-          onClick={async () => {
-            const res = await fetch(apiUrl('/add-gift'), {
-              method: 'POST',
-              headers: {'Content-Type': 'application/json'},
-              body: JSON.stringify({productId: 1, giftId: 1})
-            });
-            const data = await res.json();
-            setGlobalMessage(data.data.message);
-          }}
-        >+巧克力 ¥88</button>
-        <button 
-          style={{margin: '5px', padding: '8px', background: 'white', border: 'none', borderRadius: '5px'}}
-          onClick={async () => {
-            const res = await fetch(apiUrl('/add-gift'), {
-              method: 'POST',
-              headers: {'Content-Type': 'application/json'},
-              body: JSON.stringify({productId: 1, giftId: 2})
-            });
-            const data = await res.json();
-            setGlobalMessage(data.data.message);
-          }}
-        >+玩偶 ¥129</button>
-      </div>
+                {/* SCRUM-19: Optional Gifts */}
+                <div style={{background: 'rgba(255,255,255,0.15)', padding: '15px', borderRadius: '10px'}}>
+                  <div style={{display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '10px'}}>
+                    <span style={{background: '#4CAF50', width: '20px', height: '20px', borderRadius: '50%'}}></span>
+                    <strong>SCRUM-19: Optional Gifts</strong>
+                  </div>
+                  <button 
+                    style={{margin: '5px', padding: '8px', background: 'white', border: 'none', borderRadius: '5px'}}
+                    onClick={async () => {
+                      const res = await fetch(apiUrl('/add-gift'), {
+                        method: 'POST',
+                        headers: {'Content-Type': 'application/json'},
+                        body: JSON.stringify({productId: 1, giftId: 1})
+                      });
+                      const data = await res.json();
+                      setGlobalMessage(data.data.message);
+                    }}
+                  >+Chocolate ¥88</button>
+                  <button 
+                    style={{margin: '5px', padding: '8px', background: 'white', border: 'none', borderRadius: '5px'}}
+                    onClick={async () => {
+                      const res = await fetch(apiUrl('/add-gift'), {
+                        method: 'POST',
+                        headers: {'Content-Type': 'application/json'},
+                        body: JSON.stringify({productId: 1, giftId: 2})
+                      });
+                      const data = await res.json();
+                      setGlobalMessage(data.data.message);
+                    }}
+                  >+Teddy Bear ¥129</button>
+                </div>
 
-      {/* SCRUM-23: 购物车 - 已有 */}
-      <div style={{background: 'rgba(76, 175, 80, 0.3)', padding: '15px', borderRadius: '10px'}}>
-        <div style={{display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '10px'}}>
-          <span style={{background: '#4CAF50', width: '20px', height: '20px', borderRadius: '50%'}}></span>
-          <strong>SCRUM-23: 购物车</strong>
-        </div>
-        <div>商品数量: {cartCount}</div>
-        <button 
-          style={{marginTop: '10px', padding: '8px', background: 'white', border: 'none', borderRadius: '5px'}}
-          onClick={() => setPage('cart')}
-        >查看购物车</button>
-      </div>
+                {/* SCRUM-23: Shopping Cart - Existing */}
+                <div style={{background: 'rgba(76, 175, 80, 0.3)', padding: '15px', borderRadius: '10px'}}>
+                  <div style={{display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '10px'}}>
+                    <span style={{background: '#4CAF50', width: '20px', height: '20px', borderRadius: '50%'}}></span>
+                    <strong>SCRUM-23: Shopping Cart</strong>
+                  </div>
+                  <div>Items: {cartCount}</div>
+                  <button 
+                    style={{marginTop: '10px', padding: '8px', background: 'white', border: 'none', borderRadius: '5px'}}
+                    onClick={() => setPage('cart')}
+                  >View Cart</button>
+                </div>
 
-      {/* SCRUM-24: 配送信息 - 已有 */}
-      <div style={{background: 'rgba(76, 175, 80, 0.3)', padding: '15px', borderRadius: '10px'}}>
-        <div style={{display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '10px'}}>
-          <span style={{background: '#4CAF50', width: '20px', height: '20px', borderRadius: '50%'}}></span>
-          <strong>SCRUM-24: 配送信息</strong>
-        </div>
-        <div>在结算时填写</div>
-      </div>
+                {/* SCRUM-24: Delivery Info - Existing */}
+                <div style={{background: 'rgba(76, 175, 80, 0.3)', padding: '15px', borderRadius: '10px'}}>
+                  <div style={{display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '10px'}}>
+                    <span style={{background: '#4CAF50', width: '20px', height: '20px', borderRadius: '50%'}}></span>
+                    <strong>SCRUM-24: Delivery Info</strong>
+                  </div>
+                  <div>Fill at checkout</div>
+                </div>
 
-      {/* SCRUM-28: 订单追踪 - 已有 */}
-      <div style={{background: 'rgba(76, 175, 80, 0.3)', padding: '15px', borderRadius: '10px'}}>
-        <div style={{display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '10px'}}>
-          <span style={{background: '#4CAF50', width: '20px', height: '20px', borderRadius: '50%'}}></span>
-          <strong>SCRUM-28: 订单追踪</strong>
-        </div>
-        <button 
-          style={{padding: '8px', background: 'white', border: 'none', borderRadius: '5px'}}
-          onClick={() => setPage('orders')}
-        >查看我的订单</button>
-      </div>
+                {/* SCRUM-28: Order Tracking - Existing */}
+                <div style={{background: 'rgba(76, 175, 80, 0.3)', padding: '15px', borderRadius: '10px'}}>
+                  <div style={{display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '10px'}}>
+                    <span style={{background: '#4CAF50', width: '20px', height: '20px', borderRadius: '50%'}}></span>
+                    <strong>SCRUM-28: Order Tracking</strong>
+                  </div>
+                  <button 
+                    style={{padding: '8px', background: 'white', border: 'none', borderRadius: '5px'}}
+                    onClick={() => setPage('orders')}
+                  >View My Orders</button>
+                </div>
 
-      {/* SCRUM-29: 通知 - 已有 */}
-      <div style={{background: 'rgba(76, 175, 80, 0.3)', padding: '15px', borderRadius: '10px'}}>
-        <div style={{display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '10px'}}>
-          <span style={{background: '#4CAF50', width: '20px', height: '20px', borderRadius: '50%'}}></span>
-          <strong>SCRUM-29: 通知</strong>
-        </div>
-        <div>{globalMessage || '暂无新通知'}</div>
-      </div>
+                {/* SCRUM-29: Notifications - Existing */}
+                <div style={{background: 'rgba(76, 175, 80, 0.3)', padding: '15px', borderRadius: '10px'}}>
+                  <div style={{display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '10px'}}>
+                    <span style={{background: '#4CAF50', width: '20px', height: '20px', borderRadius: '50%'}}></span>
+                    <strong>SCRUM-29: Notifications</strong>
+                  </div>
+                  <div>{globalMessage || 'No new notifications'}</div>
+                </div>
 
-    </div>
-  </div>
-)}
+              </div>
+            </div>
+          )}
 
           <main className="page-main">
             {page === 'home' && (
