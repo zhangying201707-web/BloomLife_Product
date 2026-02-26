@@ -297,7 +297,7 @@ exports.saveDeliveryDetails = async (req, res) => {
   }
 };
 
-// US-021: 追踪订单状态
+// US-021: track order  status
 exports.trackOrder = async (req, res) => {
   try {
     const { orderId } = req.params;

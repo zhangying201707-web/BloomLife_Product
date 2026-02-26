@@ -1,6 +1,6 @@
 const { User } = require('../models/userModel');
 
-// 创建用户
+// create users
 async function createUser(req, res) {
   const { username, email } = req.body;
   try {
@@ -11,7 +11,7 @@ async function createUser(req, res) {
   }
 }
 
-// 查询所有用户
+// search users
 async function getUsers(req, res) {
   try {
     const users = await User.findAll();

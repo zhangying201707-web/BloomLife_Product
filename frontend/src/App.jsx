@@ -284,7 +284,7 @@ function App() {
                   <GreetingCard />
                 </div>
 
-                {/* SCRUM-19: Optional Gifts */}
+                {/* SCRUM-19: Optional Gifts -yan*/}
                 <div style={{background: 'rgba(255,255,255,0.15)', padding: '15px', borderRadius: '10px'}}>
                   <div style={{display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '10px'}}>
                     <span style={{background: '#4CAF50', width: '20px', height: '20px', borderRadius: '50%'}}></span>
@@ -316,7 +316,7 @@ function App() {
                   >+Teddy Bear ¥129</button>
                 </div>
 
-                {/* SCRUM-23: Shopping Cart - Existing */}
+                {/* SCRUM-23: Shopping Cart - Existing -yan */}
                 <div style={{background: 'rgba(76, 175, 80, 0.3)', padding: '15px', borderRadius: '10px'}}>
                   <div style={{display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '10px'}}>
                     <span style={{background: '#4CAF50', width: '20px', height: '20px', borderRadius: '50%'}}></span>
@@ -329,7 +329,7 @@ function App() {
                   >View Cart</button>
                 </div>
 
-                {/* SCRUM-24: Delivery Info - Existing */}
+                {/* SCRUM-24: Delivery Info - Existing -yan*/}
                 <div style={{background: 'rgba(76, 175, 80, 0.3)', padding: '15px', borderRadius: '10px'}}>
                   <div style={{display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '10px'}}>
                     <span style={{background: '#4CAF50', width: '20px', height: '20px', borderRadius: '50%'}}></span>
@@ -338,8 +338,8 @@ function App() {
                   <div>Fill at checkout</div>
                 </div>
 
-                {/* SCRUM-28: Order Tracking - Existing */}
-                <div style={{background: 'rgba(76, 175, 80, 0.3)', padding: '15px', borderRadius: '10px'}}>
+                {/* SCRUM-28: Order Tracking - Existing -yan*/}
+                <div style={{background: 'rgba(7, 11, 7, 0.3)', padding: '15px', borderRadius: '10px'}}>
                   <div style={{display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '10px'}}>
                     <span style={{background: '#4CAF50', width: '20px', height: '20px', borderRadius: '50%'}}></span>
                     <strong>SCRUM-28: Order Tracking</strong>
@@ -350,7 +350,7 @@ function App() {
                   >View My Orders</button>
                 </div>
 
-                {/* SCRUM-29: Notifications - Existing */}
+                {/* SCRUM-29: Notifications - Existing -yan*/}
                 <div style={{background: 'rgba(76, 175, 80, 0.3)', padding: '15px', borderRadius: '10px'}}>
                   <div style={{display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '10px'}}>
                     <span style={{background: '#4CAF50', width: '20px', height: '20px', borderRadius: '50%'}}></span>
