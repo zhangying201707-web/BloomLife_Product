@@ -12,8 +12,7 @@ test.describe('Customer Journey Sprint Stories', () => {
     await occasionCard.locator('select').nth(1).selectOption('Romantic');
     await occasionCard.locator('select').nth(2).selectOption('Love');
     await occasionCard.getByRole('button', { name: 'Apply Filters' }).click();
-
-    await expect(page.locator('.toast-message')).toContainText('Filter result:');
+    await expect(page.locator('.product-card')).toHaveCount(1);
 
     const pricingCard = page.locator('article.journey-card').filter({ hasText: 'Pricing Breakdown' });
     await pricingCard.getByRole('button', { name: 'View Price Details' }).click();
