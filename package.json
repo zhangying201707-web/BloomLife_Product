@@ -3,7 +3,13 @@
     "dev:docker": "docker compose -f docker-compose.dev.yml up --build",
     "build:frontend": "npm --prefix frontend run build",
     "deploy:frontend": "powershell -ExecutionPolicy Bypass -File ./scripts/deploy-frontend-firebase.ps1",
-    "deploy:backend": "powershell -ExecutionPolicy Bypass -File ./scripts/deploy-backend-cloudrun.ps1"
+    "deploy:backend": "powershell -ExecutionPolicy Bypass -File ./scripts/deploy-backend-cloudrun.ps1",
+    "e2e:setup": "cd e2e && npm install && npx playwright install chromium",
+    "e2e:dev": "npx --prefix e2e playwright test --config=e2e/playwright.dev.config.js",
+    "e2e:dev:ui": "npx --prefix e2e playwright test --config=e2e/playwright.dev.config.js --ui",
+    "e2e:prod:visual": "npx --prefix e2e playwright test --config=e2e/playwright.prod.config.js --headed",
+    "e2e:prod:ui": "npx --prefix e2e playwright test --config=e2e/playwright.prod.config.js --ui",
+    "e2e:report": "npx --prefix e2e playwright show-report"
   },
   "dependencies": {
     "bcryptjs": "^3.0.3",

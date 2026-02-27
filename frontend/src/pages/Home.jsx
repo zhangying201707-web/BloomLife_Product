@@ -1,4 +1,14 @@
-export default function Home({ products, loading, onAddToCart, readonly = false }) {
+import OccasionFilterCard from '../features/customerJourney/components/OccasionFilterCard';
+import PricingCard from '../features/customerJourney/components/PricingCard';
+
+export default function Home({
+  products,
+  loading,
+  onAddToCart,
+  readonly = false,
+  onFilteredProducts,
+  onMessage,
+}) {
   return (
     <section className="panel">
       <div className="section-title-row">
@@ -29,6 +39,13 @@ export default function Home({ products, loading, onAddToCart, readonly = false 
           </article>
         ))}
       </div>
+
+      {!readonly && (
+        <div className="journey-grid" style={{ marginTop: 16 }}>
+          <OccasionFilterCard onFiltered={onFilteredProducts} onMessage={onMessage} />
+          <PricingCard productId={products[0]?.id} onMessage={onMessage} />
+        </div>
+      )}
     </section>
   );
 }

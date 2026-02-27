@@ -91,3 +91,25 @@ npm --prefix frontend run build
 Built files are generated in `frontend/dist` and are ready for Firebase Hosting deploy.
 
 
+
+## E2E Testing (Playwright)
+
+Teacher verification scripts for Sprint stories are provided under `e2e/`.
+
+```powershell
+npm run e2e:setup
+npm run e2e:dev
+```
+
+Production visual run:
+
+```powershell
+$env:E2E_BASE_URL='https://your-frontend-domain'
+npm run e2e:prod:visual
+```
+
+Open report:
+
+```powershell
+npm run e2e:report
+```

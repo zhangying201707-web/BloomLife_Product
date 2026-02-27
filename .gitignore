@@ -13,3 +13,8 @@ frontend/.env
 frontend/.env.*
 !frontend/.env.example
 !frontend/.env.*.example
+
+# E2E artifacts
+e2e/playwright-report/
+e2e/test-results/
+e2e/.playwright/

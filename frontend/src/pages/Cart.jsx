@@ -1,6 +1,9 @@
 import { useMemo, useState } from 'react';
+import DeliveryDetailsForm from '../features/customerJourney/components/DeliveryDetailsForm';
+import GiftPicker from '../features/customerJourney/components/GiftPicker';
+import GreetingCardForm from '../features/customerJourney/components/GreetingCardForm';
 
-export default function Cart({ cart, onCheckout, onRemove, onUpdateQuantity }) {
+export default function Cart({ cart, onCheckout, onRemove, onUpdateQuantity, onMessage }) {
   const [deliveryAddress, setDeliveryAddress] = useState('');
   const [note, setNote] = useState('');
 
@@ -68,6 +71,12 @@ export default function Cart({ cart, onCheckout, onRemove, onUpdateQuantity }) {
             <button className="primary-btn" onClick={submitOrder}>
               Place Order
             </button>
+          </div>
+
+          <div className="journey-grid" style={{ marginTop: 14 }}>
+            <GiftPicker productId={cart[0]?.id} onMessage={onMessage} />
+            <GreetingCardForm onMessage={onMessage} />
+            <DeliveryDetailsForm onMessage={onMessage} />
           </div>
         </>
       )}
