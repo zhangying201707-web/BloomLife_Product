@@ -3,6 +3,8 @@ import Login from './Login';
 import Register from './pages/Register';
 import Home from './pages/Home';
 import Cart from './pages/Cart';
+import Orders from './pages/Orders';
+import Inbox from './pages/Inbox';
 import NavBar from './pages/NavBar';
 import BrandLogo from './components/BrandLogo';
 import { apiUrl } from './api';
@@ -18,11 +20,10 @@ function App() {
   const [cart, setCart] = useState([]);
   const [globalMessage, setGlobalMessage] = useState('');
   const [loadingProducts, setLoadingProducts] = useState(true);
+  const [filteredProducts, setFilteredProducts] = useState(null);
 
-  const cartCount = useMemo(
-    () => cart.reduce((sum, item) => sum + item.quantity, 0),
-    [cart]
-  );
+  const cartCount = useMemo(() => cart.reduce((sum, item) => sum + item.quantity, 0), [cart]);
+  const currentProducts = filteredProducts ?? products;
 
   async function fetchProducts() {
     try {
@@ -31,6 +32,7 @@ function App() {
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || 'Failed to load products');
       setProducts(data);
+      setFilteredProducts(null);
     } catch (error) {
       setGlobalMessage(error.message);
     } finally {
@@ -147,15 +149,12 @@ function App() {
               className="ghost-btn"
               onClick={() => setAuthMode((prev) => (prev === 'login' ? 'register' : 'login'))}
             >
-              {authMode === 'login' ? "Don't have an account? Register" : 'Already have an account? Log in'}
+              {authMode === 'login'
+                ? "Don't have an account? Register"
+                : 'Already have an account? Log in'}
             </button>
           </section>
-          <Home
-            products={products.slice(0, 3)}
-            loading={loadingProducts}
-            onAddToCart={null}
-            readonly
-          />
+          <Home products={products.slice(0, 3)} loading={loadingProducts} onAddToCart={null} readonly />
         </main>
       ) : (
         <>
@@ -166,12 +165,15 @@ function App() {
             currentPage={page}
             cartCount={cartCount}
           />
+
           <main className="page-main">
             {page === 'home' && (
               <Home
-                products={products}
+                products={currentProducts}
                 loading={loadingProducts}
                 onAddToCart={handleAddToCart}
+                onFilteredProducts={setFilteredProducts}
+                onMessage={setGlobalMessage}
               />
             )}
             {page === 'cart' && (
@@ -180,25 +182,13 @@ function App() {
                 onCheckout={handleCheckout}
                 onRemove={handleRemoveFromCart}
                 onUpdateQuantity={handleUpdateQuantity}
+                onMessage={setGlobalMessage}
               />
             )}
             {page === 'orders' && (
-              <section className="panel orders-panel">
-                <h2>My Orders</h2>
-                {orders.length === 0 && <p>No orders yet. Start shopping from the home page.</p>}
-                {orders.map((order) => (
-                  <article key={order.id} className="order-item">
-                    <div>
-                      <strong>Order #{order.id}</strong>
-                      <span className="order-status">{order.status}</span>
-                    </div>
-                    <p>Total: ¥{Number(order.totalAmount).toFixed(2)}</p>
-                    <p>Address: {order.deliveryAddress}</p>
-                    <p>Time: {new Date(order.createdAt).toLocaleString()}</p>
-                  </article>
-                ))}
-              </section>
+              <Orders orders={orders} onMessage={setGlobalMessage} />
             )}
+            {page === 'inbox' && <Inbox user={user} onMessage={setGlobalMessage} />}
           </main>
         </>
       )}

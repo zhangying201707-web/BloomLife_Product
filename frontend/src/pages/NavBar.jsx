@@ -11,19 +11,25 @@ export default function NavBar({ loginUser, onLogout, onNav, currentPage, cartCo
           className={currentPage === 'home' ? 'nav-link active' : 'nav-link'}
           onClick={() => onNav('home')}
         >
-          Home
+          Shop
         </button>
         <button
           className={currentPage === 'cart' ? 'nav-link active' : 'nav-link'}
           onClick={() => onNav('cart')}
         >
-          Cart ({cartCount})
+          Checkout ({cartCount})
         </button>
         <button
           className={currentPage === 'orders' ? 'nav-link active' : 'nav-link'}
           onClick={() => onNav('orders')}
         >
-          My Orders
+          Orders
+        </button>
+        <button
+          className={currentPage === 'inbox' ? 'nav-link active' : 'nav-link'}
+          onClick={() => onNav('inbox')}
+        >
+          Inbox
         </button>
       </div>
       <div className="nav-user">
