@@ -37,11 +37,25 @@ export default function OccasionFilterCard({ onFiltered, onMessage }) {
     }
   }
 
+  async function onOccasionChange(nextOccasion) {
+    setOccasion(nextOccasion);
+    setLoading(true);
+    try {
+      const data = await filterProducts({ occasion: nextOccasion, style, mood });
+      onFiltered?.(data.data || []);
+      onMessage?.(`Filter result: ${data.total || 0} product(s)`);
+    } catch (error) {
+      onMessage?.(error.message);
+    } finally {
+      setLoading(false);
+    }
+  }
+
   return (
     <article className="journey-card">
       <h3>Occasion & Mood</h3>
       <p className="hint-text">US-001, US-002</p>
-      <select className="text-input" value={occasion} onChange={(e) => setOccasion(e.target.value)}>
+      <select className="text-input" value={occasion} onChange={(e) => onOccasionChange(e.target.value)}>
         <option value="">All occasions</option>
         {occasions.map((item) => (
           <option key={item.id} value={item.id}>
