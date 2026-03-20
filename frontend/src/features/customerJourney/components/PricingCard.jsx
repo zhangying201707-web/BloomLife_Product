@@ -25,7 +25,6 @@ export default function PricingCard({ productId, onMessage }) {
   return (
     <article className="journey-card">
       <h3>Pricing Breakdown</h3>
-      <p className="hint-text">US-006</p>
       <button className="primary-btn" onClick={loadPricing} disabled={loading}>
         {loading ? 'Loading...' : 'View Price Details'}
       </button>

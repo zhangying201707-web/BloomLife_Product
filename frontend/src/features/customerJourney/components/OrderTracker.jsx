@@ -26,7 +26,6 @@ export default function OrderTracker({ onMessage }) {
   return (
     <article className="journey-card">
       <h3>Order Tracking</h3>
-      <p className="hint-text">US-021</p>
       <input
         className="text-input"
         placeholder="Order ID"

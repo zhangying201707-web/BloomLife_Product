@@ -39,6 +39,7 @@ This mode:
 - slows each action by `2000ms`
 - uses a fixed `1440 x 960` viewport so the demo layout stays stable
 - is intended for live demos and screen recording
+- uses a higher test timeout automatically so slow-motion playback does not fail early
 
 Sprint 2 only:
 
@@ -56,8 +57,14 @@ npm run e2e:sprint2:visual
 
 The Sprint 2 suite now runs as one demo flow and prints progress logs like:
 - `Phase 1/4: Discovery and product research`
-- `Validating US-001 ...`
+- `Validating G-6-US-3 ...`
 - `Phase 4/4: Admin workflow`
+
+Admin demo access in the flow:
+- Open `Admin Demo Login`
+- Use the fixed demo account
+- Username: `demo_admin`
+- Password: `Admin123456`
 
 ## 2) Production Environment Visual E2E
 
@@ -91,12 +98,10 @@ Reports are generated under:
 
 ## Covered Stories (mapped)
 
-- US-001/US-002: Occasion & style/mood filtering
-- US-006: Pricing breakdown
-- US-007: Availability and delivery date check
-- US-011: Greeting card message
-- US-012: Optional gifts
-- US-016: Cart management entry flow
-- US-017: Delivery detail submission
-- US-021: Order tracking
-- US-022: Notification center refresh
+- G-6-US-3 / G-6-US-4: Budget filtering and trending arrangements
+- G-6-US-5: Arrangement comparison
+- G-6-US-8 / G-6-US-9 / G-6-US-10: Product descriptions, reviews, gallery, and pricing
+- G-6-US-13 / G-6-US-14 / G-6-US-15: Wrapping, personalized message, and favorite messages
+- G-6-US-18 / G-6-US-19 / G-6-US-20: Delivery time window, promo code, and payment method
+- G-6-US-25 / G-6-US-33: Subscription and customer support
+- G-6-US-36 / G-6-US-37: Admin product management and order status updates

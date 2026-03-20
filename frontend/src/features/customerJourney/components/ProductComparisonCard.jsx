@@ -34,7 +34,6 @@ export default function ProductComparisonCard({ products, onMessage }) {
   return (
     <article className="journey-card">
       <h3>Arrangement Comparison</h3>
-      <p className="hint-text">US-003</p>
       <select className="text-input" value={leftId} onChange={(e) => setLeftId(e.target.value)}>
         <option value="">Choose arrangement A</option>
         {products.map((product) => (

@@ -45,7 +45,6 @@ export default function ProductInsightsCard({ products, defaultProductId, onMess
   return (
     <article className="journey-card">
       <h3>Product Details & Reviews</h3>
-      <p className="hint-text">US-004, US-005, US-006</p>
       <select className="text-input" value={productId} onChange={(e) => setProductId(e.target.value)}>
         <option value="">Choose a product</option>
         {products.map((product) => (

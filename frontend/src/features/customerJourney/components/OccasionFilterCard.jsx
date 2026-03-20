@@ -69,7 +69,6 @@ export default function OccasionFilterCard({ onFiltered, onMessage }) {
   return (
     <article className="journey-card">
       <h3>Budget & Trending Discovery</h3>
-      <p className="hint-text">US-001, US-002</p>
       <select className="text-input" value={occasion} onChange={(e) => onOccasionChange(e.target.value)}>
         <option value="">All occasions</option>
         {occasions.map((item) => (

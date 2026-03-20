@@ -77,7 +77,6 @@ export default function AdminConsoleCard({ onMessage }) {
   return (
     <article className="journey-card">
       <h3>Admin Console</h3>
-      <p className="hint-text">US-015, US-016</p>
       <div className="journey-actions">
         <button className="primary-btn" onClick={handleCreateProduct} disabled={loading}>
           Create Demo Product

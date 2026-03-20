@@ -34,7 +34,6 @@ export default function WrappingStyleCard({ productId, onMessage }) {
   return (
     <article className="journey-card">
       <h3>Wrapping Styles</h3>
-      <p className="hint-text">US-007</p>
       <button className="primary-btn" onClick={loadWrappingOptions} disabled={loading}>
         {loading ? 'Loading...' : 'View Wrapping Options'}
       </button>

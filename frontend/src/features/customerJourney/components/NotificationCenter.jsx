@@ -29,7 +29,6 @@ export default function NotificationCenter({ userId, onMessage }) {
   return (
     <article className="journey-card">
       <h3>Notifications</h3>
-      <p className="hint-text">US-022</p>
       <div className="journey-actions">
         <button className="primary-btn" onClick={() => loadNotifications()} disabled={loading}>
           {loading ? 'Loading...' : 'Refresh'}

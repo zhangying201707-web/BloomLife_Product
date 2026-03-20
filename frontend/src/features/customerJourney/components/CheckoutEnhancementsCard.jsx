@@ -42,7 +42,6 @@ export default function CheckoutEnhancementsCard({ subtotal, onMessage }) {
   return (
     <article className="journey-card">
       <h3>Promo & Payment</h3>
-      <p className="hint-text">US-011, US-012</p>
       <input
         className="text-input"
         placeholder="Promo code"

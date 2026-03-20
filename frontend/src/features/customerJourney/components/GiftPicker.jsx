@@ -30,7 +30,6 @@ export default function GiftPicker({ productId, onMessage }) {
   return (
     <article className="journey-card">
       <h3>Optional Gifts</h3>
-      <p className="hint-text">US-012</p>
       <div className="journey-actions">
         {gifts.map((gift) => (
           <button

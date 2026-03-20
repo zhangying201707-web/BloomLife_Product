@@ -28,7 +28,6 @@ export default function DeliveryDetailsForm({ onMessage }) {
   return (
     <article className="journey-card">
       <h3>Delivery Details</h3>
-      <p className="hint-text">US-010</p>
       <input
         className="text-input"
         placeholder="Recipient"

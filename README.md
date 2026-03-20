@@ -105,6 +105,36 @@ npm run e2e:setup
 npm run e2e:dev
 ```
 
+Sprint 2 demo run:
+
+```powershell
+$env:E2E_BASE_URL='http://localhost:5174/'
+npm run e2e:sprint2
+```
+
+Sprint 2 visual demo run:
+
+```powershell
+$env:E2E_BASE_URL='http://localhost:5174/'
+npm run e2e:sprint2:visual
+```
+
+The Sprint 2 demo suite runs as one flow and prints progress logs in the terminal, including the current phase and current story id.
+
+Current Sprint 2 story ids:
+- `G-6-US-3` / `G-6-US-4`: Budget filtering and trending arrangements
+- `G-6-US-5`: Arrangement comparison
+- `G-6-US-8` / `G-6-US-9` / `G-6-US-10`: Product descriptions, reviews, gallery, and pricing
+- `G-6-US-13` / `G-6-US-14` / `G-6-US-15`: Wrapping, greeting card preview, and favorite messages
+- `G-6-US-18` / `G-6-US-19` / `G-6-US-20`: Delivery window, promo code, and payment method
+- `G-6-US-25` / `G-6-US-33`: Subscription and customer support
+- `G-6-US-36` / `G-6-US-37`: Admin product management and order status updates
+
+Admin demo access:
+- The admin flow uses a fixed demo account from the dedicated admin login screen
+- Username: `demo_admin`
+- Password: `Admin123456`
+
 Production visual run:
 
 ```powershell

@@ -55,7 +55,6 @@ export default function GreetingCardForm({ userId, onMessage }) {
   return (
     <article className="journey-card">
       <h3>Greeting Card</h3>
-      <p className="hint-text">US-008, US-009</p>
       <input
         className="text-input"
         placeholder="Recipient"

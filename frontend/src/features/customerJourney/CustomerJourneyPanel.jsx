@@ -20,7 +20,7 @@ export default function CustomerJourneyPanel({
     <section className="panel journey-panel">
       <div className="section-title-row">
         <h2>Customer Journey Features</h2>
-        <p>US-001 / 002 / 006 / 007 / 011 / 012 / 016 / 017 / 021 / 022</p>
+        <p>Browse discovery, checkout, and support tools from one panel.</p>
       </div>
 
       <div className="journey-grid">
@@ -35,7 +35,6 @@ export default function CustomerJourneyPanel({
 
         <article className="journey-card">
           <h3>Cart & Checkout</h3>
-          <p className="hint-text">US-016</p>
           <p>Items in cart: {cartCount}</p>
           <button className="primary-btn" onClick={onOpenCart}>
             Open Cart
@@ -44,7 +43,6 @@ export default function CustomerJourneyPanel({
 
         <article className="journey-card">
           <h3>My Orders</h3>
-          <p className="hint-text">US-021</p>
           <button className="primary-btn" onClick={onOpenOrders}>
             Open Orders
           </button>

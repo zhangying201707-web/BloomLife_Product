@@ -42,7 +42,6 @@ export default function SubscriptionSupportCard({ userId, onMessage }) {
   return (
     <article className="journey-card">
       <h3>Subscription & Support</h3>
-      <p className="hint-text">US-013, US-014</p>
       <select className="text-input" value={plan} onChange={(e) => setPlan(e.target.value)}>
         <option>Seasonal Classic</option>
         <option>Luxury Signature</option>

@@ -26,7 +26,6 @@ export default function AvailabilityCard({ productId, onMessage }) {
   return (
     <article className="journey-card">
       <h3>Delivery Availability</h3>
-      <p className="hint-text">US-007</p>
       <input
         className="text-input"
         placeholder="ZIP code"
