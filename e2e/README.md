@@ -17,8 +17,8 @@ npm run e2e:dev
 ```
 
 This command will:
-- start backend at `http://127.0.0.1:3000` (or reuse existing)
-- start frontend at `http://127.0.0.1:5173` (or reuse existing)
+- start backend at `http://127.0.0.1:3001` when using Docker host mapping, or `http://127.0.0.1:3100` for Playwright auto-start local runs
+- start frontend at `http://127.0.0.1:5174` (or reuse existing)
 - execute Playwright tests headless
 
 Optional interactive debug UI:
@@ -27,16 +27,48 @@ Optional interactive debug UI:
 npm run e2e:dev:ui
 ```
 
+Visual demo mode for recording:
+
+```powershell
+$env:E2E_BASE_URL='http://localhost:5174/'
+npm run e2e:dev:visual
+```
+
+This mode:
+- opens a headed browser window
+- slows each action by `2000ms`
+- uses a fixed `1440 x 960` viewport so the demo layout stays stable
+- is intended for live demos and screen recording
+
+Sprint 2 only:
+
+```powershell
+$env:E2E_BASE_URL='http://localhost:5174/'
+npm run e2e:sprint2
+```
+
+Sprint 2 only visual demo:
+
+```powershell
+$env:E2E_BASE_URL='http://localhost:5174/'
+npm run e2e:sprint2:visual
+```
+
+The Sprint 2 suite now runs as one demo flow and prints progress logs like:
+- `Phase 1/4: Discovery and product research`
+- `Validating US-001 ...`
+- `Phase 4/4: Admin workflow`
+
 ## 2) Production Environment Visual E2E
 
 Set production URL first (example below), then run headed visual checks:
 
 ```powershell
-$env:E2E_BASE_URL='http://localhost:5173/'
+$env:E2E_BASE_URL='http://localhost:5174/'
 npm run e2e:prod:visual
 ```
 
-Note: this visual mode uses built-in slow motion (`slowMo: 600ms`) for easier live demo viewing.
+Note: this visual mode uses a fixed `1440 x 960` viewport for more stable recording output.
 
 Optional Playwright UI mode against production:
 

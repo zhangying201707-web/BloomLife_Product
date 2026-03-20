@@ -1,10 +1,12 @@
 import { useEffect, useMemo, useState } from 'react';
 import Login from './Login';
 import Register from './pages/Register';
+import AdminLogin from './pages/AdminLogin';
 import Home from './pages/Home';
 import Cart from './pages/Cart';
 import Orders from './pages/Orders';
 import Inbox from './pages/Inbox';
+import Admin from './pages/Admin';
 import NavBar from './pages/NavBar';
 import BrandLogo from './components/BrandLogo';
 import { apiUrl } from './api';
@@ -111,6 +113,7 @@ function App() {
 
   function handleLogout() {
     setUser(null);
+    setAuthMode('login');
     setPage('home');
     setCart([]);
     setOrders([]);
@@ -134,8 +137,19 @@ function App() {
               <Login
                 onLogin={(loginUser) => {
                   setUser(loginUser);
+                  setPage(loginUser.role === 'admin' ? 'admin' : 'home');
                   setGlobalMessage(`Welcome back, ${loginUser.username}`);
                 }}
+                onAdminMode={() => setAuthMode('admin')}
+              />
+            ) : authMode === 'admin' ? (
+              <AdminLogin
+                onLogin={(loginUser) => {
+                  setUser(loginUser);
+                  setPage('admin');
+                  setGlobalMessage(`Admin access granted: ${loginUser.username}`);
+                }}
+                onBack={() => setAuthMode('login')}
               />
             ) : (
               <Register
@@ -147,11 +161,18 @@ function App() {
             )}
             <button
               className="ghost-btn"
-              onClick={() => setAuthMode((prev) => (prev === 'login' ? 'register' : 'login'))}
+              onClick={() =>
+                setAuthMode((prev) => {
+                  if (prev === 'register') return 'login';
+                  return 'register';
+                })
+              }
             >
-              {authMode === 'login'
+              {authMode === 'register'
+                ? 'Already have an account? Log in'
+                : authMode === 'login'
                 ? "Don't have an account? Register"
-                : 'Already have an account? Log in'}
+                : 'Need a customer account? Register'}
             </button>
           </section>
           <Home products={products.slice(0, 3)} loading={loadingProducts} onAddToCart={null} readonly />
@@ -164,12 +185,14 @@ function App() {
             onNav={setPage}
             currentPage={page}
             cartCount={cartCount}
+            isAdmin={user?.role === 'admin'}
           />
 
           <main className="page-main">
             {page === 'home' && (
               <Home
                 products={currentProducts}
+                allProducts={products}
                 loading={loadingProducts}
                 onAddToCart={handleAddToCart}
                 onFilteredProducts={setFilteredProducts}
@@ -182,13 +205,15 @@ function App() {
                 onCheckout={handleCheckout}
                 onRemove={handleRemoveFromCart}
                 onUpdateQuantity={handleUpdateQuantity}
+                userId={user?.userId}
                 onMessage={setGlobalMessage}
               />
             )}
             {page === 'orders' && (
-              <Orders orders={orders} onMessage={setGlobalMessage} />
+              <Orders orders={orders} user={user} onMessage={setGlobalMessage} />
             )}
             {page === 'inbox' && <Inbox user={user} onMessage={setGlobalMessage} />}
+            {page === 'admin' && user?.role === 'admin' && <Admin onMessage={setGlobalMessage} />}
           </main>
         </>
       )}

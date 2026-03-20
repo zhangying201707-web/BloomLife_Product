@@ -1,3 +1,6 @@
+const { Product } = require('../../models/productModel');
+const { Order } = require('../../models/orderModel');
+
 const OCCASIONS = [
   { id: 1, name: 'Birthday' },
   { id: 2, name: "Valentine's Day" },
@@ -19,6 +22,23 @@ const PRODUCTS = [
     price: 299,
     image: 'https://images.unsplash.com/photo-1490750967868-88aa4486c946?auto=format&fit=crop&w=1200&q=80',
     category: 'Bouquet',
+    trendingScore: 98,
+    rating: 4.9,
+    reviewCount: 186,
+    description:
+      '11 Ecuador roses with eucalyptus, premium wrapping, and a keepsake vase insert for romantic occasions.',
+    stemCount: 11,
+    freshness: '48-hour freshness guarantee',
+    wrapStyles: ['Rose Gold Mesh', 'Classic Ivory', 'Midnight Black'],
+    gallery: [
+      { angle: 'Front', image: 'https://images.unsplash.com/photo-1490750967868-88aa4486c946?auto=format&fit=crop&w=1200&q=80' },
+      { angle: 'Side', image: 'https://images.unsplash.com/photo-1468327768560-75b778cbb551?auto=format&fit=crop&w=1200&q=80' },
+      { angle: 'Top', image: 'https://images.unsplash.com/photo-1455656678494-4d1b5f3e7ad1?auto=format&fit=crop&w=1200&q=80' },
+    ],
+    reviews: [
+      { id: 101, author: 'Lina', rating: 5, comment: 'Looked exactly like the photo and lasted a full week.' },
+      { id: 102, author: 'Mason', rating: 5, comment: 'Elegant wrapping and very reliable delivery.' },
+    ],
   },
   {
     id: 2,
@@ -29,6 +49,23 @@ const PRODUCTS = [
     price: 259,
     image: 'https://images.unsplash.com/photo-1520763185298-1b434c919102?auto=format&fit=crop&w=1200&q=80',
     category: 'Gift Box',
+    trendingScore: 95,
+    rating: 4.8,
+    reviewCount: 142,
+    description:
+      'A modern tulip arrangement packed in a rigid gift box with satin ribbon and mini care guide.',
+    stemCount: 18,
+    freshness: 'Cold-chain packed for gift presentation',
+    wrapStyles: ['Apricot Ribbon', 'Minimal Kraft', 'Pearl White'],
+    gallery: [
+      { angle: 'Front', image: 'https://images.unsplash.com/photo-1520763185298-1b434c919102?auto=format&fit=crop&w=1200&q=80' },
+      { angle: '45 Degree', image: 'https://images.unsplash.com/photo-1525310072745-f49212b5ac6d?auto=format&fit=crop&w=1200&q=80' },
+      { angle: 'Open Box', image: 'https://images.unsplash.com/photo-1519378058457-4c29a0a2efac?auto=format&fit=crop&w=1200&q=80' },
+    ],
+    reviews: [
+      { id: 201, author: 'Ava', rating: 5, comment: 'Bright colors and very presentable for graduation.' },
+      { id: 202, author: 'Noah', rating: 4, comment: 'Gift box looked premium and secure.' },
+    ],
   },
   {
     id: 3,
@@ -39,6 +76,23 @@ const PRODUCTS = [
     price: 369,
     image: 'https://images.unsplash.com/photo-1468327768560-75b778cbb551?auto=format&fit=crop&w=1200&q=80',
     category: 'Basket',
+    trendingScore: 87,
+    rating: 4.7,
+    reviewCount: 96,
+    description:
+      'White lilies, lisianthus, and eucalyptus arranged in a reusable woven basket for refined gifting.',
+    stemCount: 20,
+    freshness: 'Hydration foam keeps blooms stable in transit',
+    wrapStyles: ['Linen Bow', 'Champagne Satin', 'Soft Sage'],
+    gallery: [
+      { angle: 'Front', image: 'https://images.unsplash.com/photo-1468327768560-75b778cbb551?auto=format&fit=crop&w=1200&q=80' },
+      { angle: 'Side', image: 'https://images.unsplash.com/photo-1490750967868-88aa4486c946?auto=format&fit=crop&w=1200&q=80' },
+      { angle: 'Basket Detail', image: 'https://images.unsplash.com/photo-1525310072745-f49212b5ac6d?auto=format&fit=crop&w=1200&q=80' },
+    ],
+    reviews: [
+      { id: 301, author: 'Emma', rating: 5, comment: 'Very tasteful and premium for a formal delivery.' },
+      { id: 302, author: 'Leo', rating: 4, comment: 'Basket quality was better than expected.' },
+    ],
   },
   {
     id: 4,
@@ -49,6 +103,23 @@ const PRODUCTS = [
     price: 219,
     image: 'https://images.unsplash.com/photo-1470509037663-253afd7f0f51?auto=format&fit=crop&w=1200&q=80',
     category: 'Bouquet',
+    trendingScore: 92,
+    rating: 4.8,
+    reviewCount: 128,
+    description:
+      'Sunflowers with champagne roses and green fillers, designed for upbeat and celebratory gifting.',
+    stemCount: 12,
+    freshness: 'Best seller for same-day gifting',
+    wrapStyles: ['Sunshine Yellow', 'Natural Kraft', 'Terracotta Wrap'],
+    gallery: [
+      { angle: 'Front', image: 'https://images.unsplash.com/photo-1470509037663-253afd7f0f51?auto=format&fit=crop&w=1200&q=80' },
+      { angle: 'Close Up', image: 'https://images.unsplash.com/photo-1520763185298-1b434c919102?auto=format&fit=crop&w=1200&q=80' },
+      { angle: 'Top', image: 'https://images.unsplash.com/photo-1455656678494-4d1b5f3e7ad1?auto=format&fit=crop&w=1200&q=80' },
+    ],
+    reviews: [
+      { id: 401, author: 'Ivy', rating: 5, comment: 'Super cheerful and the colors were vivid.' },
+      { id: 402, author: 'Lucas', rating: 4, comment: 'Great value for the size.' },
+    ],
   },
   {
     id: 5,
@@ -59,6 +130,23 @@ const PRODUCTS = [
     price: 459,
     image: 'https://images.unsplash.com/photo-1519378058457-4c29a0a2efac?auto=format&fit=crop&w=1200&q=80',
     category: 'Preserved Flower',
+    trendingScore: 90,
+    rating: 4.9,
+    reviewCount: 74,
+    description:
+      'Long-lasting preserved roses in an acrylic keepsake box for milestone celebrations and premium gifting.',
+    stemCount: 9,
+    freshness: 'Preserved arrangement with 12-month display life',
+    wrapStyles: ['Velvet Sleeve', 'Gold Ribbon', 'Luxury Black Box'],
+    gallery: [
+      { angle: 'Front', image: 'https://images.unsplash.com/photo-1519378058457-4c29a0a2efac?auto=format&fit=crop&w=1200&q=80' },
+      { angle: 'Open Lid', image: 'https://images.unsplash.com/photo-1455656678494-4d1b5f3e7ad1?auto=format&fit=crop&w=1200&q=80' },
+      { angle: 'Side', image: 'https://images.unsplash.com/photo-1490750967868-88aa4486c946?auto=format&fit=crop&w=1200&q=80' },
+    ],
+    reviews: [
+      { id: 501, author: 'Grace', rating: 5, comment: 'Ideal for anniversaries and looked very luxurious.' },
+      { id: 502, author: 'Ethan', rating: 5, comment: 'Worth the premium price.' },
+    ],
   },
   {
     id: 6,
@@ -69,6 +157,23 @@ const PRODUCTS = [
     price: 189,
     image: 'https://images.unsplash.com/photo-1525310072745-f49212b5ac6d?auto=format&fit=crop&w=1200&q=80',
     category: 'Table Arrangement',
+    trendingScore: 84,
+    rating: 4.6,
+    reviewCount: 88,
+    description:
+      'An affordable mixed-flower table arrangement with carnations, daisies, and baby’s breath.',
+    stemCount: 16,
+    freshness: 'Budget-friendly pick with daily restock',
+    wrapStyles: ['Pastel Pink', 'Soft Mint', 'Minimal White'],
+    gallery: [
+      { angle: 'Front', image: 'https://images.unsplash.com/photo-1525310072745-f49212b5ac6d?auto=format&fit=crop&w=1200&q=80' },
+      { angle: 'Room View', image: 'https://images.unsplash.com/photo-1520763185298-1b434c919102?auto=format&fit=crop&w=1200&q=80' },
+      { angle: 'Top', image: 'https://images.unsplash.com/photo-1468327768560-75b778cbb551?auto=format&fit=crop&w=1200&q=80' },
+    ],
+    reviews: [
+      { id: 601, author: 'Sophia', rating: 5, comment: 'Affordable and fresh for a desk arrangement.' },
+      { id: 602, author: 'Jack', rating: 4, comment: 'Nice size for everyday gifting.' },
+    ],
   },
 ];
 
@@ -79,6 +184,22 @@ const GIFTS = [
   { id: 4, name: 'Red Wine Mini', price: 199, description: 'Imported red wine mini bottle' },
   { id: 5, name: 'Perfume Sample Set', price: 59, description: 'Seasonal perfume set' },
 ];
+
+const PAYMENT_METHODS = [
+  { id: 'card', name: 'Credit / Debit Card', fee: 0, eta: 'Instant confirmation' },
+  { id: 'paypal', name: 'PayPal', fee: 0, eta: 'Instant confirmation' },
+  { id: 'applepay', name: 'Apple Pay', fee: 0, eta: 'Mobile quick pay' },
+  { id: 'cod', name: 'Cash on Delivery', fee: 8, eta: 'Confirmed after dispatch' },
+];
+
+const SUPPORT_OPTIONS = [
+  { id: 'live-chat', label: 'Live Chat', availability: '09:00-23:00', responseTime: '< 3 minutes' },
+  { id: 'phone', label: 'Phone Support', availability: '24/7 hotline 400-800-1314', responseTime: 'Immediate' },
+  { id: 'wechat', label: 'WeChat Concierge', availability: '08:00-22:00', responseTime: '< 10 minutes' },
+];
+
+const FAVORITE_MESSAGES = new Map();
+const SUBSCRIPTIONS = [];
 
 function toNumber(value, fallback = 0) {
   const parsed = Number(value);
@@ -91,14 +212,22 @@ function twoDaysLater() {
   return date.toISOString().slice(0, 10);
 }
 
+function getProduct(productId) {
+  return PRODUCTS.find((item) => item.id === toNumber(productId)) || PRODUCTS[0];
+}
+
+function normalizeFavoriteKey(userId) {
+  return String(userId || 'guest');
+}
+
 exports.getOccasions = (req, res) => {
   res.json({ success: true, data: OCCASIONS });
 };
 
 exports.filterProducts = (req, res) => {
-  const { occasion, style, mood } = req.query;
+  const { occasion, style, mood, maxBudget, trendingOnly } = req.query;
 
-  let filtered = PRODUCTS;
+  let filtered = [...PRODUCTS];
 
   if (occasion) {
     const occasionId = toNumber(occasion, -1);
@@ -113,12 +242,113 @@ exports.filterProducts = (req, res) => {
     filtered = filtered.filter((item) => item.mood.toLowerCase() === String(mood).toLowerCase());
   }
 
+  if (maxBudget) {
+    const budget = toNumber(maxBudget, 0);
+    filtered = filtered.filter((item) => item.price <= budget);
+  }
+
+  if (String(trendingOnly) === 'true') {
+    filtered = filtered
+      .filter((item) => item.trendingScore >= 90)
+      .sort((a, b) => b.trendingScore - a.trendingScore);
+  }
+
   res.json({ success: true, data: filtered, total: filtered.length });
 };
 
+exports.getTrendingArrangements = (req, res) => {
+  const data = [...PRODUCTS]
+    .sort((a, b) => b.trendingScore - a.trendingScore)
+    .slice(0, 3)
+    .map((item) => ({
+      id: item.id,
+      name: item.name,
+      price: item.price,
+      category: item.category,
+      trendingScore: item.trendingScore,
+      rating: item.rating,
+    }));
+
+  res.json({ success: true, data });
+};
+
+exports.compareProducts = (req, res) => {
+  const productIds = String(req.query.productIds || '')
+    .split(',')
+    .map((item) => toNumber(item))
+    .filter(Boolean)
+    .slice(0, 2);
+
+  if (productIds.length < 2) {
+    return res.status(400).json({ success: false, error: 'Please select two products to compare' });
+  }
+
+  const data = productIds.map((id) => getProduct(id)).map((item) => ({
+    id: item.id,
+    name: item.name,
+    price: item.price,
+    category: item.category,
+    style: item.style,
+    mood: item.mood,
+    rating: item.rating,
+    reviewCount: item.reviewCount,
+    stemCount: item.stemCount,
+    freshness: item.freshness,
+  }));
+
+  res.json({ success: true, data });
+};
+
+exports.getProductDetails = (req, res) => {
+  const product = getProduct(req.params.productId);
+
+  res.json({
+    success: true,
+    data: {
+      id: product.id,
+      name: product.name,
+      description: product.description,
+      category: product.category,
+      style: product.style,
+      mood: product.mood,
+      stemCount: product.stemCount,
+      freshness: product.freshness,
+      included: ['Flower arrangement', 'Care instruction card', 'Water pack', 'Gift bag'],
+    },
+  });
+};
+
+exports.getProductReviews = (req, res) => {
+  const product = getProduct(req.params.productId);
+
+  res.json({
+    success: true,
+    data: {
+      rating: product.rating,
+      reviewCount: product.reviewCount,
+      items: product.reviews,
+    },
+  });
+};
+
+exports.getProductGallery = (req, res) => {
+  const product = getProduct(req.params.productId);
+  res.json({ success: true, data: product.gallery });
+};
+
+exports.getWrappingOptions = (req, res) => {
+  const product = getProduct(req.params.productId);
+  const data = product.wrapStyles.map((name, index) => ({
+    id: `${product.id}-${index + 1}`,
+    name,
+    surcharge: index === 0 ? 0 : 12 + index * 6,
+  }));
+
+  res.json({ success: true, data });
+};
+
 exports.getPricingBreakdown = (req, res) => {
-  const productId = toNumber(req.params.productId, 1);
-  const product = PRODUCTS.find((item) => item.id === productId) || PRODUCTS[0];
+  const product = getProduct(req.params.productId);
   const basePrice = product.price;
   const packaging = 25;
   const deliveryFee = 15;
@@ -191,11 +421,37 @@ exports.saveGreetingCard = (req, res) => {
   });
 };
 
+exports.saveFavoriteMessage = (req, res) => {
+  const { userId, label, message, recipient, sender } = req.body;
+
+  if (!message) {
+    return res.status(400).json({ success: false, error: 'Please provide a message to save' });
+  }
+
+  const key = normalizeFavoriteKey(userId);
+  const existing = FAVORITE_MESSAGES.get(key) || [];
+  const nextItem = {
+    id: Date.now(),
+    label: label || `Favorite ${existing.length + 1}`,
+    message,
+    recipient: recipient || '',
+    sender: sender || '',
+  };
+
+  FAVORITE_MESSAGES.set(key, [nextItem, ...existing].slice(0, 5));
+  res.json({ success: true, data: nextItem, total: FAVORITE_MESSAGES.get(key).length });
+};
+
+exports.getFavoriteMessages = (req, res) => {
+  const key = normalizeFavoriteKey(req.params.userId);
+  res.json({ success: true, data: FAVORITE_MESSAGES.get(key) || [] });
+};
+
 exports.addOptionalGift = (req, res) => {
   const productId = toNumber(req.body.productId, 1);
   const giftId = toNumber(req.body.giftId, 0);
 
-  const product = PRODUCTS.find((item) => item.id === productId) || PRODUCTS[0];
+  const product = getProduct(productId);
   const gift = GIFTS.find((item) => item.id === giftId);
 
   if (!gift) {
@@ -310,6 +566,75 @@ exports.saveDeliveryDetails = (req, res) => {
   });
 };
 
+exports.applyPromoCode = (req, res) => {
+  const subtotal = toNumber(req.body.subtotal, 0);
+  const code = String(req.body.code || '').trim().toUpperCase();
+  const promotions = {
+    SAVE10: { type: 'percent', value: 0.1, label: '10% off flowers' },
+    SPRING20: { type: 'amount', value: 20, label: 'Spring special ¥20 off' },
+    FREESHIP: { type: 'amount', value: 15, label: 'Delivery fee waived' },
+  };
+
+  const promotion = promotions[code];
+
+  if (!promotion) {
+    return res.status(400).json({ success: false, error: 'Promo code is invalid or expired' });
+  }
+
+  const discount =
+    promotion.type === 'percent'
+      ? Math.round(subtotal * promotion.value * 100) / 100
+      : Math.min(subtotal, promotion.value);
+
+  res.json({
+    success: true,
+    data: {
+      code,
+      description: promotion.label,
+      subtotal,
+      discount,
+      totalAfterDiscount: Math.max(0, subtotal - discount),
+    },
+  });
+};
+
+exports.getPaymentMethods = (req, res) => {
+  res.json({ success: true, data: PAYMENT_METHODS });
+};
+
+exports.subscribeMonthlyBox = (req, res) => {
+  const { userId, plan, address, frequency } = req.body;
+
+  if (!plan || !address) {
+    return res.status(400).json({ success: false, error: 'Please choose a plan and delivery address' });
+  }
+
+  const item = {
+    id: Date.now(),
+    userId: userId || null,
+    plan,
+    address,
+    frequency: frequency || 'Monthly',
+    nextDelivery: twoDaysLater(),
+  };
+
+  SUBSCRIPTIONS.push(item);
+  res.json({ success: true, data: item });
+};
+
+exports.getSupportOptions = (req, res) => {
+  res.json({
+    success: true,
+    data: {
+      channels: SUPPORT_OPTIONS,
+      faqs: [
+        'Can I change the delivery time after checkout? Yes, before florist preparation starts.',
+        'Do you support same-day delivery? Yes, for supported ZIP zones before 18:00.',
+      ],
+    },
+  });
+};
+
 exports.trackOrder = (req, res) => {
   const { orderId } = req.params;
   const statuses = ['Paid', 'Processing', 'Shipped', 'Out for Delivery', 'Delivered'];
@@ -375,4 +700,86 @@ exports.getNotifications = (req, res) => {
     total: result.length,
     unreadCount: notifications.filter((item) => !item.read).length,
   });
+};
+
+exports.listAdminProducts = async (req, res) => {
+  try {
+    const products = await Product.findAll({ order: [['id', 'ASC']] });
+    res.json({ success: true, data: products });
+  } catch (error) {
+    res.status(500).json({ success: false, error: error.message });
+  }
+};
+
+exports.createAdminProduct = async (req, res) => {
+  try {
+    const { name, description, price, image, category, stock } = req.body;
+
+    if (!name || !description || !image || !category) {
+      return res.status(400).json({ success: false, error: 'Please complete the product form' });
+    }
+
+    const product = await Product.create({
+      name,
+      description,
+      price: toNumber(price, 0),
+      image,
+      category,
+      stock: Math.max(0, toNumber(stock, 0)),
+    });
+
+    res.status(201).json({ success: true, data: product });
+  } catch (error) {
+    res.status(500).json({ success: false, error: error.message });
+  }
+};
+
+exports.updateAdminProduct = async (req, res) => {
+  try {
+    const product = await Product.findByPk(req.params.productId);
+
+    if (!product) {
+      return res.status(404).json({ success: false, error: 'Product not found' });
+    }
+
+    const { price, stock, description } = req.body;
+    await product.update({
+      price: price === undefined ? product.price : toNumber(price, product.price),
+      stock: stock === undefined ? product.stock : Math.max(0, toNumber(stock, product.stock)),
+      description: description || product.description,
+    });
+
+    res.json({ success: true, data: product });
+  } catch (error) {
+    res.status(500).json({ success: false, error: error.message });
+  }
+};
+
+exports.listAdminOrders = async (req, res) => {
+  try {
+    const orders = await Order.findAll({ order: [['createdAt', 'DESC']], limit: 10 });
+    res.json({ success: true, data: orders });
+  } catch (error) {
+    res.status(500).json({ success: false, error: error.message });
+  }
+};
+
+exports.updateOrderStatus = async (req, res) => {
+  try {
+    const order = await Order.findByPk(req.params.orderId);
+
+    if (!order) {
+      return res.status(404).json({ success: false, error: 'Order not found' });
+    }
+
+    const nextStatus = String(req.body.status || '').trim();
+    if (!nextStatus) {
+      return res.status(400).json({ success: false, error: 'Please provide a new status' });
+    }
+
+    await order.update({ status: nextStatus });
+    res.json({ success: true, data: order });
+  } catch (error) {
+    res.status(500).json({ success: false, error: error.message });
+  }
 };

@@ -4,6 +4,9 @@ if (!process.env.E2E_BASE_URL) {
   throw new Error('E2E_BASE_URL is required for production Playwright runs.');
 }
 
+const fixedViewport = { width: 1440, height: 960 };
+const fixedScreen = { width: 1440, height: 960 };
+
 module.exports = defineConfig({
   testDir: './tests',
   timeout: 60 * 1000,
@@ -19,8 +22,11 @@ module.exports = defineConfig({
   use: {
     baseURL: process.env.E2E_BASE_URL,
     headless: false,
+    viewport: fixedViewport,
+    screen: fixedScreen,
     launchOptions: {
       slowMo: 800,
+      args: ['--window-size=1440,960'],
     },
     trace: 'on',
     screenshot: 'on',
@@ -29,7 +35,11 @@ module.exports = defineConfig({
   projects: [
     {
       name: 'chromium',
-      use: { ...devices['Desktop Chrome'] },
+      use: {
+        ...devices['Desktop Chrome'],
+        viewport: fixedViewport,
+        screen: fixedScreen,
+      },
     },
   ],
   webServer: undefined,

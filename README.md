@@ -96,6 +96,10 @@ Built files are generated in `frontend/dist` and are ready for Firebase Hosting 
 
 Teacher verification scripts for Sprint stories are provided under `e2e/`.
 
+Docker development ports on the host:
+- Frontend: `http://localhost:5174`
+- Backend API: `http://localhost:3001`
+
 ```powershell
 npm run e2e:setup
 npm run e2e:dev

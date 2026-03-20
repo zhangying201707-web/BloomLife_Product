@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { getOccasions, filterProducts } from '../api';
+import { getOccasions, filterProducts, getTrendingArrangements } from '../api';
 
 const styles = ['Romantic', 'Modern', 'Elegant', 'Sunny', 'Classic', 'Simple'];
 const moods = ['Love', 'Happy', 'Respect', 'Cheerful', 'Admiration', 'Warm'];
@@ -9,6 +9,8 @@ export default function OccasionFilterCard({ onFiltered, onMessage }) {
   const [occasion, setOccasion] = useState('');
   const [style, setStyle] = useState('');
   const [mood, setMood] = useState('');
+  const [maxBudget, setMaxBudget] = useState('');
+  const [trending, setTrending] = useState([]);
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
@@ -27,7 +29,7 @@ export default function OccasionFilterCard({ onFiltered, onMessage }) {
   async function applyFilters() {
     setLoading(true);
     try {
-      const data = await filterProducts({ occasion, style, mood });
+      const data = await filterProducts({ occasion, style, mood, maxBudget });
       onFiltered?.(data.data || []);
       onMessage?.(`Filter result: ${data.total || 0} product(s)`);
     } catch (error) {
@@ -41,7 +43,7 @@ export default function OccasionFilterCard({ onFiltered, onMessage }) {
     setOccasion(nextOccasion);
     setLoading(true);
     try {
-      const data = await filterProducts({ occasion: nextOccasion, style, mood });
+      const data = await filterProducts({ occasion: nextOccasion, style, mood, maxBudget });
       onFiltered?.(data.data || []);
       onMessage?.(`Filter result: ${data.total || 0} product(s)`);
     } catch (error) {
@@ -51,9 +53,22 @@ export default function OccasionFilterCard({ onFiltered, onMessage }) {
     }
   }
 
+  async function showTrending() {
+    setLoading(true);
+    try {
+      const data = await getTrendingArrangements();
+      setTrending(data.data || []);
+      onMessage?.('Loaded trending arrangements');
+    } catch (error) {
+      onMessage?.(error.message);
+    } finally {
+      setLoading(false);
+    }
+  }
+
   return (
     <article className="journey-card">
-      <h3>Occasion & Mood</h3>
+      <h3>Budget & Trending Discovery</h3>
       <p className="hint-text">US-001, US-002</p>
       <select className="text-input" value={occasion} onChange={(e) => onOccasionChange(e.target.value)}>
         <option value="">All occasions</option>
@@ -79,9 +94,27 @@ export default function OccasionFilterCard({ onFiltered, onMessage }) {
           </option>
         ))}
       </select>
+      <input
+        className="text-input"
+        placeholder="Max budget"
+        value={maxBudget}
+        onChange={(e) => setMaxBudget(e.target.value)}
+      />
       <button className="primary-btn" onClick={applyFilters} disabled={loading}>
         {loading ? 'Filtering...' : 'Apply Filters'}
       </button>
+      <button className="ghost-btn" onClick={showTrending} disabled={loading}>
+        Show Trending Arrangements
+      </button>
+      {trending.length > 0 && (
+        <div className="journey-list">
+          {trending.map((item) => (
+            <p key={item.id}>
+              <strong>{item.name}</strong>: score {item.trendingScore}, {item.rating} stars
+            </p>
+          ))}
+        </div>
+      )}
     </article>
   );
 }

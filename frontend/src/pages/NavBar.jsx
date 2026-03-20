@@ -1,6 +1,6 @@
 import BrandLogo from '../components/BrandLogo';
 
-export default function NavBar({ loginUser, onLogout, onNav, currentPage, cartCount }) {
+export default function NavBar({ loginUser, onLogout, onNav, currentPage, cartCount, isAdmin }) {
   return (
     <nav className="top-nav">
       <div className="nav-brand">
@@ -31,6 +31,14 @@ export default function NavBar({ loginUser, onLogout, onNav, currentPage, cartCo
         >
           Inbox
         </button>
+        {isAdmin && (
+          <button
+            className={currentPage === 'admin' ? 'nav-link active' : 'nav-link'}
+            onClick={() => onNav('admin')}
+          >
+            Admin
+          </button>
+        )}
       </div>
       <div className="nav-user">
         <span>{loginUser}</span>

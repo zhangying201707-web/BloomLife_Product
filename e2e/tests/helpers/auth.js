@@ -22,10 +22,19 @@ async function loginAsNewUser(page) {
   const loginCard = page.locator('section.auth-card');
   await loginCard.getByPlaceholder('Username').fill(username);
   await loginCard.getByPlaceholder('Password').fill(password);
-  await loginCard.getByRole('button', { name: 'Login' }).click();
+  await loginCard.getByRole('button', { name: 'Login', exact: true }).click();
 
   await expect(page.getByRole('button', { name: 'Logout' })).toBeVisible();
   return { username };
 }
 
-module.exports = { loginAsNewUser };
+async function loginAsDemoAdmin(page) {
+  await page.goto('/');
+  await page.getByRole('button', { name: 'Admin Demo Login' }).click();
+  await expect(page.getByRole('heading', { name: 'Admin Login' })).toBeVisible();
+  await page.getByRole('button', { name: 'Login as Demo Admin' }).click();
+  await expect(page.getByRole('heading', { name: 'Admin', exact: true })).toBeVisible();
+  return { username: 'demo_admin' };
+}
+
+module.exports = { loginAsNewUser, loginAsDemoAdmin };

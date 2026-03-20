@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { apiUrl } from './api';
 
-export default function Login({ onLogin }) {
+export default function Login({ onLogin, onAdminMode }) {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
@@ -27,7 +27,7 @@ export default function Login({ onLogin }) {
         return;
       }
       setError('');
-      onLogin({ username: data.username, userId: data.userId });
+      onLogin({ username: data.username, userId: data.userId, role: data.role || 'customer' });
     } catch (err) {
       setError(err.message || 'Network error');
     } finally {
@@ -57,6 +57,9 @@ export default function Login({ onLogin }) {
         </button>
         {error && <p className="error-text">{error}</p>}
       </form>
+      <button type="button" className="ghost-btn auth-switch" onClick={onAdminMode}>
+        Admin Demo Login
+      </button>
     </section>
   );
 }

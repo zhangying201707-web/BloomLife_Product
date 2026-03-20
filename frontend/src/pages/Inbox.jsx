@@ -1,4 +1,5 @@
 import NotificationCenter from '../features/customerJourney/components/NotificationCenter';
+import SubscriptionSupportCard from '../features/customerJourney/components/SubscriptionSupportCard';
 
 export default function Inbox({ user, onMessage }) {
   return (
@@ -9,6 +10,7 @@ export default function Inbox({ user, onMessage }) {
       </div>
       <div className="journey-grid">
         <NotificationCenter userId={user?.userId} onMessage={onMessage} />
+        <SubscriptionSupportCard userId={user?.userId} onMessage={onMessage} />
       </div>
     </section>
   );
