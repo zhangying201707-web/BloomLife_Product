@@ -1,0 +1,13 @@
+US-023: Delivery photo confirmation-As a user, I want to receive a photo of the delivered flowers so that I know the recipient received the correct arrangement.
+US-024: Delay alerts-As a user, I want to receive delay alerts so that I can manage expectations with the recipient.
+US-026: Manage subscription-As a user, I want to manage my subscription so that I can pause or change my plan.
+US-027: Preview subscription themes-As a user, I want to preview upcoming themes so that I know what to expect.
+US-028: Update subscription address-As a user, I want to update my delivery address for subscriptions so that my flowers arrive at the right place.
+US-029: View order history (MVP)-As a user, I want to view my order history so that I can reference past purchases.
+US-030: Reorder previous purchases-As a user, I want to reorder previous purchases so that I can quickly buy my favorites again.
+US-031: Save favorite products-As a user, I want to save favorite products so that I can access them easily.
+US-032: Update personal information-As a user, I want to update my personal information so that my account stays accurate.
+US-034: Browse FAQs-As a user, I want to browse FAQs so that I can solve simple issues myself.
+US-035: Chat with support agent-As a user, I want to chat with a support agent so that I can get real-time help.
+US-038: Admin manage subscription shipments-As an admin, I want to manage subscription shipments so that recurring orders are fulfilled smoothly.
+US-039: Admin sales analytics-As an admin, I want to view sales analytics so that I can understand product performance.
