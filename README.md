@@ -130,6 +130,28 @@ Current Sprint 2 story ids:
 - `G-6-US-25` / `G-6-US-33`: Subscription and customer support
 - `G-6-US-36` / `G-6-US-37`: Admin product management and order status updates
 
+Sprint 3 demo run:
+
+```powershell
+$env:E2E_BASE_URL='http://localhost:5174/'
+npm run e2e:sprint3
+```
+
+Sprint 3 visual demo run:
+
+```powershell
+$env:E2E_BASE_URL='http://localhost:5174/'
+npm run e2e:sprint3:visual
+```
+
+Current Sprint 3 story ids:
+- `G-6-US-23` / `G-6-US-24`: Delivery proof photo and delay alerts
+- `G-6-US-26` / `G-6-US-27` / `G-6-US-28`: Subscription management, theme preview, and address updates
+- `G-6-US-29` / `G-6-US-30`: Order history and reorder
+- `G-6-US-31` / `G-6-US-32`: Favorite products and personal information updates
+- `G-6-US-34` / `G-6-US-35`: FAQ browsing and live support chat
+- `G-6-US-38` / `G-6-US-39`: Admin subscription shipments and sales analytics
+
 Admin demo access:
 - The admin flow uses a fixed demo account from the dedicated admin login screen
 - Username: `demo_admin`

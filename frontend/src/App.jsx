@@ -86,6 +86,22 @@ function App() {
     );
   }
 
+  function handleReorder(items) {
+    const normalizedItems = (items || []).map((item) => ({
+      ...item,
+      quantity: Number(item.quantity) || 1,
+    }));
+
+    if (normalizedItems.length === 0) {
+      setGlobalMessage('No items available to reorder');
+      return;
+    }
+
+    setCart(normalizedItems);
+    setPage('cart');
+    setGlobalMessage('Previous order copied to checkout');
+  }
+
   async function handleCheckout(deliveryAddress, note) {
     if (!user?.username) return;
     try {
@@ -210,9 +226,22 @@ function App() {
               />
             )}
             {page === 'orders' && (
-              <Orders orders={orders} user={user} onMessage={setGlobalMessage} />
+              <Orders orders={orders} user={user} onMessage={setGlobalMessage} onReorder={handleReorder} />
             )}
-            {page === 'inbox' && <Inbox user={user} onMessage={setGlobalMessage} />}
+            {page === 'inbox' && (
+              <Inbox
+                user={user}
+                products={products}
+                onMessage={setGlobalMessage}
+                onProfileUpdated={(profile) =>
+                  setUser((prev) => ({
+                    ...prev,
+                    username: profile.username,
+                    email: profile.email,
+                  }))
+                }
+              />
+            )}
             {page === 'admin' && user?.role === 'admin' && <Admin onMessage={setGlobalMessage} />}
           </main>
         </>

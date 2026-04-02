@@ -1,5 +1,6 @@
 const { Product } = require('../../models/productModel');
 const { Order } = require('../../models/orderModel');
+const { User } = require('../../models/userModel');
 
 const OCCASIONS = [
   { id: 1, name: 'Birthday' },
@@ -198,8 +199,17 @@ const SUPPORT_OPTIONS = [
   { id: 'wechat', label: 'WeChat Concierge', availability: '08:00-22:00', responseTime: '< 10 minutes' },
 ];
 
+const FAQS = [
+  'Can I change the delivery time after checkout? Yes, before florist preparation starts.',
+  'Do you support same-day delivery? Yes, for supported ZIP zones before 18:00.',
+  'How do subscription pauses work? You can pause the next shipment and resume later from your account center.',
+  'Can I reorder a past purchase? Yes, use the reorder action from order history to copy items back into checkout.',
+];
+
 const FAVORITE_MESSAGES = new Map();
 const SUBSCRIPTIONS = [];
+const FAVORITE_PRODUCTS = new Map();
+const SUPPORT_CHAT_THREADS = new Map();
 
 function toNumber(value, fallback = 0) {
   const parsed = Number(value);
@@ -218,6 +228,25 @@ function getProduct(productId) {
 
 function normalizeFavoriteKey(userId) {
   return String(userId || 'guest');
+}
+
+function getUpcomingThemes(plan) {
+  const templates = {
+    'Seasonal Classic': ['Cherry Blossom Morning', 'Garden Pastels', 'Summer Citrus'],
+    'Luxury Signature': ['Velvet Rose Evening', 'Golden Orchid Edit', 'Pearl White Luxe'],
+    'Office Refresh': ['Desk Green Reset', 'Reception Bloom Mix', 'Meeting Room Brightener'],
+  };
+
+  return (templates[plan] || templates['Seasonal Classic']).map((theme, index) => ({
+    id: `${String(plan).toLowerCase().replace(/\s+/g, '-')}-${index + 1}`,
+    monthOffset: index + 1,
+    theme,
+  }));
+}
+
+function getSubscriptionByUserId(userId) {
+  const key = normalizeFavoriteKey(userId);
+  return SUBSCRIPTIONS.find((item) => normalizeFavoriteKey(item.userId) === key) || null;
 }
 
 exports.getOccasions = (req, res) => {
@@ -616,10 +645,84 @@ exports.subscribeMonthlyBox = (req, res) => {
     address,
     frequency: frequency || 'Monthly',
     nextDelivery: twoDaysLater(),
+    status: 'active',
+    shipmentStatus: 'scheduled',
+    pausedUntil: null,
+    upcomingThemes: getUpcomingThemes(plan),
+    updatedAt: new Date().toISOString(),
   };
 
   SUBSCRIPTIONS.push(item);
   res.json({ success: true, data: item });
+};
+
+exports.getSubscriptionSummary = (req, res) => {
+  const { userId } = req.params;
+  const subscription = getSubscriptionByUserId(userId);
+
+  res.json({
+    success: true,
+    data: {
+      subscription,
+      upcomingThemes: subscription?.upcomingThemes || getUpcomingThemes('Seasonal Classic'),
+      shipmentHistory: subscription
+        ? [
+            {
+              id: `${subscription.id}-scheduled`,
+              theme: subscription.upcomingThemes?.[0]?.theme || 'Seasonal Classic',
+              status: subscription.shipmentStatus || 'scheduled',
+              deliveryDate: subscription.nextDelivery,
+            },
+          ]
+        : [],
+    },
+  });
+};
+
+exports.updateSubscription = (req, res) => {
+  const { userId } = req.params;
+  const subscription = getSubscriptionByUserId(userId);
+
+  if (!subscription) {
+    return res.status(404).json({ success: false, error: 'Subscription not found. Please subscribe first.' });
+  }
+
+  const { plan, address, action } = req.body;
+
+  if (plan) {
+    subscription.plan = plan;
+    subscription.upcomingThemes = getUpcomingThemes(plan);
+  }
+
+  if (address) {
+    subscription.address = String(address).trim();
+  }
+
+  if (action === 'pause') {
+    subscription.status = 'paused';
+    subscription.pausedUntil = twoDaysLater();
+    subscription.shipmentStatus = 'on_hold';
+  }
+
+  if (action === 'resume') {
+    subscription.status = 'active';
+    subscription.pausedUntil = null;
+    subscription.shipmentStatus = 'scheduled';
+  }
+
+  if (action === 'dispatch') {
+    subscription.shipmentStatus = 'dispatched';
+  }
+
+  subscription.updatedAt = new Date().toISOString();
+
+  res.json({
+    success: true,
+    data: {
+      ...subscription,
+      upcomingThemes: subscription.upcomingThemes,
+    },
+  });
 };
 
 exports.getSupportOptions = (req, res) => {
@@ -627,10 +730,7 @@ exports.getSupportOptions = (req, res) => {
     success: true,
     data: {
       channels: SUPPORT_OPTIONS,
-      faqs: [
-        'Can I change the delivery time after checkout? Yes, before florist preparation starts.',
-        'Do you support same-day delivery? Yes, for supported ZIP zones before 18:00.',
-      ],
+      faqs: FAQS,
     },
   });
 };
@@ -663,7 +763,35 @@ exports.trackOrder = (req, res) => {
   });
 };
 
-exports.getNotifications = (req, res) => {
+exports.getDeliveryAssurance = async (req, res) => {
+  try {
+    const order = await Order.findByPk(req.params.orderId);
+    const fallbackItem = order?.items?.[0] || { id: 1, name: 'Morning Dew Rose Bouquet' };
+    const product = getProduct(fallbackItem.id || 1);
+
+    res.json({
+      success: true,
+      data: {
+        orderId: req.params.orderId,
+        status: order?.status || 'delivered',
+        deliveryPhoto: {
+          image: product.image,
+          caption: `${product.name} delivered successfully`,
+          deliveredAt: new Date().toISOString(),
+        },
+        delayAlert: {
+          active: true,
+          level: 'Minor',
+          message: `Courier traffic delay reported for order #${req.params.orderId}. Updated arrival window: 17:30-18:00.`,
+        },
+      },
+    });
+  } catch (error) {
+    res.status(500).json({ success: false, error: error.message });
+  }
+};
+
+exports.getNotifications = async (req, res) => {
   const notifications = [
     {
       id: 1,
@@ -691,15 +819,169 @@ exports.getNotifications = (req, res) => {
     },
   ];
 
-  const unreadOnly = String(req.query.unreadOnly || '') === 'true';
-  const result = unreadOnly ? notifications.filter((item) => !item.read) : notifications;
+  try {
+    const orders = await Order.findAll({
+      where: { userId: toNumber(req.params.userId, 0) || -1 },
+      order: [['createdAt', 'DESC']],
+      limit: 2,
+    });
 
-  res.json({
-    success: true,
-    data: result,
-    total: result.length,
-    unreadCount: notifications.filter((item) => !item.read).length,
-  });
+    if (orders.length > 0) {
+      const latestOrder = orders[0];
+      const firstItem = latestOrder.items?.[0] || { id: 1, name: 'Morning Dew Rose Bouquet' };
+      const product = getProduct(firstItem.id || 1);
+
+      notifications.unshift(
+        {
+          id: 1000 + Number(latestOrder.id),
+          type: 'delivery_photo',
+          title: 'Delivery Photo Received',
+          message: `Your recipient received ${product.name}. Delivery proof photo is now available.`,
+          read: false,
+          time: new Date().toISOString(),
+        },
+        {
+          id: 2000 + Number(latestOrder.id),
+          type: 'delay_alert',
+          title: 'Delay Alert',
+          message: `Order #${latestOrder.id} may arrive slightly later than planned. Revised ETA: 17:30-18:00.`,
+          read: false,
+          time: new Date().toISOString(),
+        }
+      );
+    }
+
+    const unreadOnly = String(req.query.unreadOnly || '') === 'true';
+    const result = unreadOnly ? notifications.filter((item) => !item.read) : notifications;
+
+    res.json({
+      success: true,
+      data: result,
+      total: result.length,
+      unreadCount: notifications.filter((item) => !item.read).length,
+    });
+  } catch (error) {
+    res.status(500).json({ success: false, error: error.message });
+  }
+};
+
+exports.saveFavoriteProduct = (req, res) => {
+  const { userId, productId } = req.body;
+  const product = getProduct(productId);
+  const key = normalizeFavoriteKey(userId);
+  const existing = FAVORITE_PRODUCTS.get(key) || [];
+
+  if (existing.some((item) => item.productId === product.id)) {
+    return res.status(400).json({ success: false, error: 'Product is already saved to favorites' });
+  }
+
+  const item = {
+    id: Date.now(),
+    productId: product.id,
+    name: product.name,
+    image: product.image,
+    price: product.price,
+  };
+
+  FAVORITE_PRODUCTS.set(key, [item, ...existing].slice(0, 6));
+  res.status(201).json({ success: true, data: item, total: FAVORITE_PRODUCTS.get(key).length });
+};
+
+exports.getFavoriteProducts = (req, res) => {
+  const key = normalizeFavoriteKey(req.params.userId);
+  res.json({ success: true, data: FAVORITE_PRODUCTS.get(key) || [] });
+};
+
+exports.getUserProfile = async (req, res) => {
+  try {
+    const user = await User.findByPk(req.params.userId);
+
+    if (!user) {
+      return res.status(404).json({ success: false, error: 'User not found' });
+    }
+
+    res.json({
+      success: true,
+      data: {
+        userId: user.id,
+        username: user.username,
+        email: user.email,
+        role: user.role,
+      },
+    });
+  } catch (error) {
+    res.status(500).json({ success: false, error: error.message });
+  }
+};
+
+exports.updateUserProfile = async (req, res) => {
+  try {
+    const user = await User.findByPk(req.params.userId);
+
+    if (!user) {
+      return res.status(404).json({ success: false, error: 'User not found' });
+    }
+
+    const nextUsername = String(req.body.username || '').trim();
+    const nextEmail = String(req.body.email || '').trim();
+
+    if (!nextUsername || !nextEmail) {
+      return res.status(400).json({ success: false, error: 'Please provide username and email' });
+    }
+
+    const usernameTaken = await User.findOne({ where: { username: nextUsername } });
+    if (usernameTaken && usernameTaken.id !== user.id) {
+      return res.status(400).json({ success: false, error: 'Username already exists' });
+    }
+
+    const emailTaken = await User.findOne({ where: { email: nextEmail } });
+    if (emailTaken && emailTaken.id !== user.id) {
+      return res.status(400).json({ success: false, error: 'Email already exists' });
+    }
+
+    await user.update({
+      username: nextUsername,
+      email: nextEmail,
+    });
+
+    res.json({
+      success: true,
+      data: {
+        userId: user.id,
+        username: user.username,
+        email: user.email,
+        role: user.role,
+      },
+    });
+  } catch (error) {
+    res.status(500).json({ success: false, error: error.message });
+  }
+};
+
+exports.startSupportChat = (req, res) => {
+  const { userId, message } = req.body;
+
+  if (!message || !String(message).trim()) {
+    return res.status(400).json({ success: false, error: 'Please enter a support message' });
+  }
+
+  const key = normalizeFavoriteKey(userId);
+  const existing = SUPPORT_CHAT_THREADS.get(key) || [];
+  const customerMessage = {
+    id: Date.now(),
+    sender: 'You',
+    text: String(message).trim(),
+  };
+  const agentReply = {
+    id: Date.now() + 1,
+    sender: 'Support Agent',
+    text: 'Thanks for reaching out. We checked your order and can continue helping in real time from this chat thread.',
+  };
+
+  const nextThread = [...existing, customerMessage, agentReply].slice(-8);
+  SUPPORT_CHAT_THREADS.set(key, nextThread);
+
+  res.json({ success: true, data: nextThread });
 };
 
 exports.listAdminProducts = async (req, res) => {
@@ -759,6 +1041,73 @@ exports.listAdminOrders = async (req, res) => {
   try {
     const orders = await Order.findAll({ order: [['createdAt', 'DESC']], limit: 10 });
     res.json({ success: true, data: orders });
+  } catch (error) {
+    res.status(500).json({ success: false, error: error.message });
+  }
+};
+
+exports.listAdminSubscriptionShipments = (req, res) => {
+  const data = SUBSCRIPTIONS.map((item) => ({
+    id: item.id,
+    userId: item.userId,
+    plan: item.plan,
+    address: item.address,
+    nextDelivery: item.nextDelivery,
+    status: item.status,
+    shipmentStatus: item.shipmentStatus,
+    nextTheme: item.upcomingThemes?.[0]?.theme || 'Seasonal Classic',
+  })).sort((a, b) => Number(b.id) - Number(a.id));
+
+  res.json({ success: true, data });
+};
+
+exports.updateAdminSubscriptionShipment = (req, res) => {
+  const shipment = SUBSCRIPTIONS.find((item) => String(item.id) === String(req.params.subscriptionId));
+
+  if (!shipment) {
+    return res.status(404).json({ success: false, error: 'Subscription shipment not found' });
+  }
+
+  const nextStatus = String(req.body.shipmentStatus || '').trim();
+  if (!nextStatus) {
+    return res.status(400).json({ success: false, error: 'Please provide a shipment status' });
+  }
+
+  shipment.shipmentStatus = nextStatus;
+  shipment.updatedAt = new Date().toISOString();
+
+  res.json({ success: true, data: shipment });
+};
+
+exports.getSalesAnalytics = async (_req, res) => {
+  try {
+    const orders = await Order.findAll({ order: [['createdAt', 'DESC']] });
+    const productMap = new Map();
+
+    for (const order of orders) {
+      for (const item of order.items || []) {
+        const key = item.name || `Product ${item.id}`;
+        const existing = productMap.get(key) || { name: key, units: 0, revenue: 0 };
+        existing.units += toNumber(item.quantity, 1);
+        existing.revenue += toNumber(item.price, 0) * toNumber(item.quantity, 1);
+        productMap.set(key, existing);
+      }
+    }
+
+    const topProducts = [...productMap.values()]
+      .sort((a, b) => b.revenue - a.revenue)
+      .slice(0, 3);
+
+    res.json({
+      success: true,
+      data: {
+        totalRevenue: orders.reduce((sum, item) => sum + toNumber(item.totalAmount, 0), 0),
+        totalOrders: orders.length,
+        activeSubscriptions: SUBSCRIPTIONS.filter((item) => item.status === 'active').length,
+        totalSubscriptions: SUBSCRIPTIONS.length,
+        topProducts,
+      },
+    });
   } catch (error) {
     res.status(500).json({ success: false, error: error.message });
   }

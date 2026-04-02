@@ -491,6 +491,7 @@ body {
   display: grid;
   gap: 8px;
   align-content: start;
+  min-width: 0;
 }
 
 .journey-card h3 {
@@ -500,6 +501,10 @@ body {
 .journey-actions {
   display: grid;
   gap: 8px;
+}
+
+.journey-actions-inline {
+  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
 }
 
 .journey-list {
@@ -525,6 +530,80 @@ body {
   display: inline-flex;
   width: auto;
   padding: 6px 10px;
+}
+
+.journey-preview-image {
+  width: 100%;
+  max-height: 180px;
+  object-fit: cover;
+  border-radius: 12px;
+}
+
+.account-center-card {
+  gap: 12px;
+}
+
+.account-center-section {
+  display: grid;
+  gap: 10px;
+}
+
+.account-center-section + .account-center-section {
+  border-top: 1px solid #efd7c9;
+  padding-top: 12px;
+}
+
+.account-center-label {
+  margin: 0;
+  color: var(--muted);
+  font-size: 0.76rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.account-center-summary,
+.account-center-empty,
+.account-favorite-item {
+  border-radius: 12px;
+  border: 1px solid #edd8ca;
+  background: rgba(255, 255, 255, 0.7);
+  padding: 10px 12px;
+}
+
+.account-center-summary {
+  display: grid;
+  gap: 8px;
+}
+
+.account-center-summary p {
+  margin: 0;
+  display: grid;
+  gap: 4px;
+  color: #5f4a42;
+}
+
+.account-center-summary span {
+  overflow-wrap: anywhere;
+}
+
+.account-favorites-list {
+  display: grid;
+  gap: 8px;
+}
+
+.account-center-empty {
+  margin: 0;
+  color: var(--muted);
+}
+
+.account-favorite-item {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  align-items: center;
+  flex-wrap: wrap;
+  color: #5f4a42;
 }
 
 .embedded-section {

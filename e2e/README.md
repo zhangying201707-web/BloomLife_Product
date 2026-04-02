@@ -60,6 +60,25 @@ The Sprint 2 suite now runs as one demo flow and prints progress logs like:
 - `Validating G-6-US-3 ...`
 - `Phase 4/4: Admin workflow`
 
+Sprint 3 only:
+
+```powershell
+$env:E2E_BASE_URL='http://localhost:5174/'
+npm run e2e:sprint3
+```
+
+Sprint 3 only visual demo:
+
+```powershell
+$env:E2E_BASE_URL='http://localhost:5174/'
+npm run e2e:sprint3:visual
+```
+
+The Sprint 3 suite also runs as one demo flow and prints progress logs like:
+- `Phase 1/3: Orders, proof of delivery, and reorder`
+- `Validating G-6-US-26 ...`
+- `Phase 3/3: Admin shipment and analytics workflow`
+
 Admin demo access in the flow:
 - Open `Admin Demo Login`
 - Use the fixed demo account
@@ -105,3 +124,9 @@ Reports are generated under:
 - G-6-US-18 / G-6-US-19 / G-6-US-20: Delivery time window, promo code, and payment method
 - G-6-US-25 / G-6-US-33: Subscription and customer support
 - G-6-US-36 / G-6-US-37: Admin product management and order status updates
+- G-6-US-23 / G-6-US-24: Delivery photo proof and delay alerts
+- G-6-US-26 / G-6-US-27 / G-6-US-28: Subscription management, theme previews, and address updates
+- G-6-US-29 / G-6-US-30: Order history and reorder
+- G-6-US-31 / G-6-US-32: Favorite products and personal information updates
+- G-6-US-34 / G-6-US-35: FAQ browsing and support chat
+- G-6-US-38 / G-6-US-39: Subscription shipment management and sales analytics

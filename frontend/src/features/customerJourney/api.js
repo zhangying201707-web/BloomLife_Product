@@ -114,17 +114,65 @@ export async function subscribeMonthlyBox(payload) {
   });
 }
 
+export async function getSubscriptionSummary(userId) {
+  return request(`/subscriptions/${userId}`);
+}
+
+export async function updateSubscription(userId, payload) {
+  return request(`/subscriptions/${userId}`, {
+    method: 'PATCH',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(payload),
+  });
+}
+
 export async function getSupportOptions() {
   return request('/support/options');
+}
+
+export async function startSupportChat(payload) {
+  return request('/support/chat', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(payload),
+  });
 }
 
 export async function trackOrder(orderId) {
   return request(`/orders/${orderId}/track`);
 }
 
+export async function getDeliveryAssurance(orderId) {
+  return request(`/orders/${orderId}/delivery-assurance`);
+}
+
 export async function getNotifications(userId, unreadOnly = false) {
   const query = unreadOnly ? '?unreadOnly=true' : '';
   return request(`/notifications/${userId}${query}`);
+}
+
+export async function saveFavoriteProduct(payload) {
+  return request('/products/favorites', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(payload),
+  });
+}
+
+export async function getFavoriteProducts(userId) {
+  return request(`/products/favorites/${userId}`);
+}
+
+export async function getUserProfile(userId) {
+  return request(`/profile/${userId}`);
+}
+
+export async function updateUserProfile(userId, payload) {
+  return request(`/profile/${userId}`, {
+    method: 'PATCH',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(payload),
+  });
 }
 
 export async function getAdminProducts() {
@@ -157,4 +205,20 @@ export async function updateAdminOrderStatus(orderId, status) {
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ status }),
   });
+}
+
+export async function getAdminSubscriptions() {
+  return request('/admin/subscriptions');
+}
+
+export async function updateAdminSubscriptionStatus(subscriptionId, shipmentStatus) {
+  return request(`/admin/subscriptions/${subscriptionId}`, {
+    method: 'PATCH',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ shipmentStatus }),
+  });
+}
+
+export async function getSalesAnalytics() {
+  return request('/admin/analytics');
 }

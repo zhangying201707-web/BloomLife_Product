@@ -1,9 +1,12 @@
 import { useEffect, useState } from 'react';
 import {
   createAdminProduct,
+  getAdminSubscriptions,
   getAdminOrders,
   getAdminProducts,
+  getSalesAnalytics,
   updateAdminOrderStatus,
+  updateAdminSubscriptionStatus,
   updateAdminProduct,
 } from '../api';
 
@@ -19,13 +22,22 @@ const seedProduct = {
 export default function AdminConsoleCard({ onMessage }) {
   const [products, setProducts] = useState([]);
   const [orders, setOrders] = useState([]);
+  const [subscriptions, setSubscriptions] = useState([]);
+  const [analytics, setAnalytics] = useState(null);
   const [loading, setLoading] = useState(false);
 
   async function refresh() {
     try {
-      const [productsRes, ordersRes] = await Promise.all([getAdminProducts(), getAdminOrders()]);
+      const [productsRes, ordersRes, subscriptionsRes, analyticsRes] = await Promise.all([
+        getAdminProducts(),
+        getAdminOrders(),
+        getAdminSubscriptions(),
+        getSalesAnalytics(),
+      ]);
       setProducts([...(productsRes.data || [])].sort((a, b) => Number(b.id) - Number(a.id)));
       setOrders(ordersRes.data || []);
+      setSubscriptions(subscriptionsRes.data || []);
+      setAnalytics(analyticsRes.data || null);
     } catch (error) {
       onMessage?.(error.message);
     }
@@ -74,6 +86,19 @@ export default function AdminConsoleCard({ onMessage }) {
     }
   }
 
+  async function handleSubscriptionShipment(subscriptionId) {
+    setLoading(true);
+    try {
+      await updateAdminSubscriptionStatus(subscriptionId, 'dispatched');
+      onMessage?.('Subscription shipment updated');
+      await refresh();
+    } catch (error) {
+      onMessage?.(error.message);
+    } finally {
+      setLoading(false);
+    }
+  }
+
   return (
     <article className="journey-card">
       <h3>Admin Console</h3>
@@ -105,6 +130,35 @@ export default function AdminConsoleCard({ onMessage }) {
             </button>
           </div>
         ))}
+        {subscriptions.length === 0 && <p>No subscription shipments queued yet.</p>}
+        {subscriptions.slice(0, 2).map((subscription) => (
+          <div key={subscription.id} className="journey-list-row">
+            <span>
+              Subscription #{subscription.id}: {subscription.nextTheme} ({subscription.shipmentStatus})
+            </span>{' '}
+            <button
+              className="ghost-btn inline-btn"
+              onClick={() => handleSubscriptionShipment(subscription.id)}
+            >
+              Dispatch Shipment
+            </button>
+          </div>
+        ))}
+        {analytics && (
+          <>
+            <p>
+              <strong>Total revenue:</strong> ¥{Number(analytics.totalRevenue || 0).toFixed(2)}
+            </p>
+            <p>
+              <strong>Subscriptions:</strong> {analytics.activeSubscriptions}/{analytics.totalSubscriptions} active
+            </p>
+            {(analytics.topProducts || []).map((item) => (
+              <p key={item.name}>
+                <strong>{item.name}</strong>: {item.units} sold / ¥{Number(item.revenue).toFixed(2)}
+              </p>
+            ))}
+          </>
+        )}
       </div>
     </article>
   );
